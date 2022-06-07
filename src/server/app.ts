@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-import { SERVER_PORT, CLIENT_PORT } from "@/constants/common";
+import { SERVER_PORT, CLIENT_PORT } from "../constants/common";
 
 const io = new Server(SERVER_PORT, {
   cors: {
