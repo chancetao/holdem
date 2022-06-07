@@ -28,7 +28,14 @@ module.exports = {
       {
         "allowTemplateLiterals": true
       }
-    ]
+    ],
+    "import/extensions": ["error", "ignorePackages", {
+      "ts": "never",
+      "tsx": "never",
+      "js": "never",
+      "jsx": "never",
+      "": "never"
+    }]
   },
   settings: {
     'import/resolver': {

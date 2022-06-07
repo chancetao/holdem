@@ -1,21 +1,25 @@
 {
-  "name": "holdme",
+  "name": "holdem",
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "serve": "vite",
+    "start": "vite",
+    "serve": "nodemon src/server/app.js",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint --ext=js,jsx,.ts,.tsx src --no-fix"
   },
   "dependencies": {
+    "express": "^4.18.1",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
-    "@types/node": "^17.0.25",
+    "@types/node": "^17.0.40",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
@@ -32,9 +36,13 @@
     "eslint-plugin-react-hooks": "^4.4.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.4.0",
+    "nodemon": "^2.0.16",
     "prettier": "^2.6.2",
     "sass": "^1.50.1",
+    "ts-node": "^10.8.1",
+    "tslib": "^2.4.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.9"
-  }
+  },
+  "type": "module"
 }
