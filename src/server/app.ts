@@ -10,9 +10,7 @@ const io = new Server(SERVER_PORT, {
 });
 
 io.on("connection", (socket) => {
-  socket.emit("hello", 123);
-
-  socket.on("howdy", (arg) => {
-    console.log(arg);
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
   });
 });
