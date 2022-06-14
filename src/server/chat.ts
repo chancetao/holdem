@@ -24,7 +24,7 @@ const defaultUser: User = {
 };
 
 let messages = new Set<Message>();
-const users = new WeakMap<Socket, User>();
+const users = new Map<Socket, User>();
 
 class Connection {
   socket: Socket;
@@ -37,7 +37,7 @@ class Connection {
 
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
-    socket.on("register", () => this.connect());
+    socket.on("sit_down", () => this.connect());
     socket.on("disconnect", () => this.disconnect());
     socket.on("connect_error", (err) => {
       // eslint-disable-next-line no-console
@@ -46,7 +46,7 @@ class Connection {
   }
 
   sendMessage(msg: Message) {
-    this.io.sockets.emit("message", msg);
+    this.io.sockets.emit("message", { msg, users: Array.from(users.values()) });
   }
 
   getMessages() {
@@ -62,11 +62,12 @@ class Connection {
     };
 
     messages.add(msg);
-    this.sendMessage(msg);
 
     if (messages.size >= 200) {
       messages = new Set(Array.from(messages).slice(1));
     }
+
+    this.sendMessage(msg);
   }
 
   connect() {
@@ -77,10 +78,12 @@ class Connection {
     };
     users.set(this.socket, user);
 
+    this.socket.emit("identify", user);
+
     const msg = {
       id: randomUUID(),
       user: defaultUser,
-      content: `${user.name} connected.`,
+      content: `${user.name} sat down.`,
       time: Date.now(),
     };
     messages.add(msg);
@@ -91,13 +94,13 @@ class Connection {
     const msg = {
       id: randomUUID(),
       user: defaultUser,
-      content: `${users.get(this.socket)?.name} disconnected.`,
+      content: `${users.get(this.socket)?.name} has left the table.`,
       time: Date.now(),
     };
     messages.add(msg);
-    this.sendMessage(msg);
-
     users.delete(this.socket);
+
+    this.sendMessage(msg);
   }
 }
 

@@ -2,31 +2,88 @@
   display: flex;
   align-items: center;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1400px;
   height: 100%;
 
   .left {
-    flex: 1 1 300px;
+    flex: 0 1 300px;
   }
 
   .desk {
-    height: 700px;
-    flex: 0 0 400px;
+    height: 400px;
+    flex: 0 0 800px;
     background-color: #724f39;
     border-radius: 200px;
+    margin: 0 50px;
     box-shadow: 0 0 25px 0 #160726;
 
     .felt {
-      width: 360px;
+      position: relative;
+      width: 740px;
       margin: 30px;
       height: calc(100% - 60px);
       background-color: #387c41;
       border-radius: 180px;
       box-shadow: 0 0 20px 0 #17541d inset;
+
+      .self {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        left: 350px;
+        font-weight: bolder;
+        width: 50px;
+        height: 50px;
+      }
+
+      .player {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        font-weight: bolder;
+        width: 50px;
+        height: 50px;
+
+        &.left1,&.right7 {
+          bottom: 0px;
+          left: 110px;
+        }
+
+        &.left2,&.right6 {
+          bottom: 150px;
+          left: 0;
+        }
+
+        &.left3,&.right5 {
+          bottom: 300px;
+          left: 110px;
+        }
+
+        &.left4,&.right4 {
+          bottom: 300px;
+          left: 350px;
+        }
+
+        &.left5,&.right3 {
+          bottom: 300px;
+          right: 100px;
+        }
+
+        &.left6,&.right2 {
+          bottom: 150px;
+          right: 0px;
+        }
+
+        &.left7,&.right1 {
+          bottom: 0px;
+          right: 110px;
+        }
+      }
     }
   }
 
   .right {
-    flex: 1 1 300px;
+    flex: 0 1 300px;
   }
 }

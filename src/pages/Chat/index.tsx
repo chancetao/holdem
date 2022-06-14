@@ -1,52 +1,24 @@
-import React, { useState, useEffect, FormEvent, useRef } from "react";
-import { io, Socket } from "socket.io-client";
-import { SERVER_PORT } from "@/constants/common";
+import React, { useState, FormEvent, RefObject } from "react";
+import { Socket } from "socket.io-client";
 import { Message } from "@/server/chat";
 import "./style.scss";
 
-function Chat() {
-  const [socket, setSocket] = useState<Socket>();
+interface Props {
+  messages: Record<string, Message> | undefined;
+  socket: Socket | undefined;
+  recordRef: RefObject<HTMLDivElement>;
+}
+
+function Chat(props: Props) {
+  const { messages, socket, recordRef } = props;
 
   const [inputVal, setInputVal] = useState("");
-  const [messages, setMessages] = useState<Record<string, Message>>();
-
-  const recordRef = useRef<HTMLDivElement>(null);
 
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
     socket?.emit("message", inputVal);
     setInputVal("");
   };
-
-  useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:${SERVER_PORT}`);
-    setSocket(newSocket);
-    return () => {
-      newSocket.close();
-    };
-  }, [setSocket]);
-
-  useEffect(() => {
-    const messageListener = (msg: Message) => {
-      setMessages((prev) => {
-        const newMsgs = { ...prev };
-        newMsgs[msg.id] = msg;
-        return newMsgs;
-      });
-
-      if (recordRef.current) {
-        recordRef.current.scrollTop = recordRef.current?.scrollHeight ?? 0;
-      }
-    };
-
-    socket?.on("message", messageListener);
-    socket?.emit("register");
-    socket?.emit("getMessages");
-
-    return () => {
-      socket?.off("message");
-    };
-  }, [socket]);
 
   return (
     <div className="chat">
