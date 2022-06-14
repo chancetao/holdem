@@ -29,6 +29,12 @@ module.exports = {
         "allowTemplateLiterals": true
       }
     ],
+    "object-curly-newline": ["error", {
+      "ObjectExpression": { "multiline": true, "minProperties": 3 },
+      "ObjectPattern": { "multiline": true, "minProperties": 3 },
+      "ImportDeclaration": "never",
+      "ExportDeclaration": { "multiline": true, "minProperties": 3 }
+    }],
     "import/extensions": ["error", "ignorePackages", {
       "ts": "never",
       "tsx": "never",

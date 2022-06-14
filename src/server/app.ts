@@ -1,16 +1,13 @@
 import { Server } from "socket.io";
 
-import { SERVER_PORT, CLIENT_PORT } from "../constants/common";
+import { SERVER_PORT } from "../constants/common";
+import chat from "./chat";
 
 const io = new Server(SERVER_PORT, {
   cors: {
-    origin: `http://localhost:${CLIENT_PORT}`,
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-io.on("connection", (socket) => {
-  socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
-  });
-});
+chat(io);
