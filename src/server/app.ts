@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 
 import { SERVER_PORT } from "../constants/common";
-import chat from "./chat";
+import connect from "./connection";
 
 const io = new Server(SERVER_PORT, {
   cors: {
@@ -10,4 +10,4 @@ const io = new Server(SERVER_PORT, {
   },
 });
 
-chat(io);
+connect(io);

@@ -6,7 +6,7 @@
   height: 100%;
 
   .left {
-    flex: 0 1 300px;
+    flex: 0 1 200px;
   }
 
   .desk {
@@ -16,6 +16,31 @@
     border-radius: 200px;
     margin: 0 50px;
     box-shadow: 0 0 25px 0 #160726;
+    position: relative;
+    bottom: 100px;
+
+    .operation {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 600px;
+      margin: 0 auto;
+      padding-top: 24px;
+
+      button {
+        border-radius: 20px;
+        text-transform: none;
+
+        &.MuiButton-containedPrimary {
+          background: #5B4B8A;
+
+          &:hover {
+            background-color: #4C3575;
+          }
+        }
+      }
+    }
 
     .felt {
       position: relative;
@@ -23,7 +48,7 @@
       margin: 30px;
       height: calc(100% - 60px);
       background-color: #387c41;
-      border-radius: 180px;
+      border-radius: 170px;
       box-shadow: 0 0 20px 0 #17541d inset;
 
       .self {
@@ -84,6 +109,6 @@
   }
 
   .right {
-    flex: 0 1 300px;
+    flex: 0 1 400px;
   }
 }

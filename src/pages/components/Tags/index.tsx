@@ -2,7 +2,7 @@ import React from "react";
 import "./style.scss";
 
 function SmallBlind() {
-  return <span className="tag small-blind">Small Blind</span>;
+  return <span className="tag small-blind">S</span>;
 }
 
 function BigBlind() {

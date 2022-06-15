@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { Server, Socket } from "socket.io";
+import utils from "../utils/utils";
 
 import { COLORS, NAMES } from "../constants/common";
 
@@ -75,6 +76,7 @@ class Connection {
       id: randomUUID(),
       color: COLORS[Math.floor(Math.random() * 10)],
       name: NAMES[Math.floor(Math.random() * 10)],
+      avatar: utils.generateAvatar(),
     };
     users.set(this.socket, user);
 
@@ -104,11 +106,11 @@ class Connection {
   }
 }
 
-function chat(io: Server) {
+function connect(io: Server) {
   io.on("connection", (socket) => {
     const connection = new Connection(io, socket);
     return connection;
   });
 }
 
-export default chat;
+export default connect;

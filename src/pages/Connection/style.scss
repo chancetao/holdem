@@ -1,0 +1,73 @@
+.connection {
+  margin: 0 20px;
+
+  .record {
+    max-height: 500px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
+
+  ul {
+    padding: 0;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      margin: 16px 10px 16px 0;
+
+      &.dealer {
+        margin: 8px 10px 8px 0;
+        .avatar {
+          display: none;
+        }
+
+        .content {
+          flex: 1;
+          text-align: center;
+
+          .content-text {
+            color: goldenrod;
+          }
+        }
+      }
+
+      .avatar {
+        display: inline-block;
+        flex: 0 0 30px;
+      }
+
+      .content {
+        margin-left: 16px;
+
+        .name {
+          font-size: 18px;
+          font-weight: bolder;
+        }
+
+        .time {
+          font-size: 12px;
+          color: #888;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
