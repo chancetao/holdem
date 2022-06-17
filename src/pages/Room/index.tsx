@@ -5,6 +5,7 @@ import { Message, User } from "@/server/connection";
 import Connection from "../Connection";
 import { SERVER_PORT } from "@/constants/common";
 // import Tags from "@/pages/components/Tags";
+import Deck from "@/server/deck";
 
 import "./style.scss";
 
@@ -61,6 +62,11 @@ function Room() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    const deck = new Deck();
+    deck.shuffle();
+  }, []);
+
   return (
     <div className="room">
       <div className="left">
@@ -91,6 +97,7 @@ function Room() {
             >
               <div
                 style={{ display: "inline-block", width: "40px" }}
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: (item.avatar as string) }}
               />
               {item.name}

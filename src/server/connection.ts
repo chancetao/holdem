@@ -1,8 +1,9 @@
 import { randomUUID } from "crypto";
 import { Server, Socket } from "socket.io";
-import utils from "../utils/utils";
+import utils from "../utils/avatar";
 
 import { COLORS, NAMES } from "../constants/common";
+import Deck from "./deck";
 
 export interface User {
   id: string
@@ -32,9 +33,13 @@ class Connection {
 
   io: Server;
 
+  deck: Deck;
+
   constructor(io: Server, socket: Socket) {
     this.socket = socket;
     this.io = io;
+
+    this.deck = new Deck();
 
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));

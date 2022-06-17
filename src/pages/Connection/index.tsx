@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, RefObject } from "react";
 import { Socket } from "socket.io-client";
-import { Button, TextareaAutosize } from "@mui/material";
+import { Button } from "@mui/material";
 import { Message } from "@/server/connection";
 
 import "./style.scss";
@@ -35,6 +35,7 @@ function Connection(props: Props) {
               >
                 <div
                   className="avatar"
+                  // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{ __html: (item.user.avatar as string) }}
                 />
                 <div className="content">
@@ -56,20 +57,21 @@ function Connection(props: Props) {
       </div>
       <div className="input">
         <form onSubmit={handleSend}>
-          <TextareaAutosize
-            minRows={2}
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-          />
-          <Button
-            size="small"
-            color="info"
-            variant="outlined"
-            disabled={!inputVal}
-            type="submit"
-          >
-            send
-          </Button>
+          <div className="input-form">
+            <input
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+            />
+            <Button
+              size="small"
+              color="info"
+              variant="contained"
+              disabled={!inputVal}
+              type="submit"
+            >
+              Send
+            </Button>
+          </div>
         </form>
       </div>
     </div>
