@@ -6,6 +6,7 @@ import Connection from "../Connection";
 import { SERVER_PORT } from "@/constants/common";
 // import Tags from "@/pages/components/Tags";
 import Deck from "@/server/deck";
+import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
 
@@ -79,7 +80,6 @@ function Room() {
                 selfIndex - index,
               )}`}
             >
-
               {item.name}
             </div>
           ))}
@@ -96,11 +96,18 @@ function Room() {
               )}`}
             >
               <div
-                style={{ display: "inline-block", width: "40px" }}
+                className="avatar"
+                style={{ display: "inline-block", flex: " 0 0 48px" }}
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: (item.avatar as string) }}
               />
-              {item.name}
+              <div className="name">
+                {item.name}
+                <span>
+                  <img src={Chips} alt="chip" />
+                  1000
+                </span>
+              </div>
             </div>
           )))}
         </div>
