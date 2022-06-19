@@ -29,7 +29,7 @@ class Connection {
 
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
-    socket.on("sit_down", () => this.connect());
+    socket.on("sitDown", () => this.connect());
     socket.on("getReady", () => this.handleReceived("getReady"));
     socket.on("disconnect", () => this.disconnect());
     socket.on("connect_error", (err) => {

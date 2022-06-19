@@ -34,3 +34,16 @@ export const CARDS = [
   "3s", "3h", "3d", "3c",
   "2s", "2h", "2d", "2c",
 ];
+
+export enum HandRanking {
+  HighCard = 1,
+  OnePair,
+  TwoPair,
+  ThreeOfAKind,
+  Straight,
+  Flush,
+  FullHouse,
+  FourOfAKind,
+  StraightFlush,
+  RoyalStraightFlush,
+}

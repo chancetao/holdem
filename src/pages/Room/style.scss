@@ -5,8 +5,10 @@
   max-width: 1400px;
   height: 100%;
 
-  .left {
+  .rank {
     flex: 0 1 200px;
+    position: relative;
+    top: -100px;
   }
 
   .desk {
@@ -57,7 +59,7 @@
         justify-content: center;
         position: absolute;
         left: 310px;
-        top: 240px;
+        bottom: -40px;
 
         .top {
           display: flex;
@@ -286,6 +288,7 @@
 
         .top {
           display: flex;
+          gap: 8px;
 
           .avatar {
             display: inline-block;

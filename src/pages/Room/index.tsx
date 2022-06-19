@@ -82,7 +82,7 @@ function Room() {
     socket?.on("identify", identifyListener);
     socket?.on("received", receivedHandler);
     socket?.on("deal", dealListener);
-    socket?.emit("sit_down");
+    socket?.emit("sitDown");
     socket?.emit("getMessages");
 
     return () => {
@@ -96,19 +96,22 @@ function Room() {
 
   return (
     <div className="room">
-      <div className="left">
-        rank:
+      <div className="rank">
+        RANK
         <ul>
-          {users.map((item, index) => (
-            <div
-              key={item.profile.id}
-              className={`player ${selfIndex > index ? "left" : "right"}${Math.abs(
-                selfIndex - index,
-              )}`}
-            >
-              {item.profile.name}
-            </div>
-          ))}
+          {users
+            .map((item, index) => (
+              <div
+                key={item.profile.id}
+                className={`player ${selfIndex > index ? "left" : "right"}${Math.abs(
+                  selfIndex - index,
+                )}`}
+              >
+                {index + 1}
+                .
+                {item.profile.name}
+              </div>
+            ))}
         </ul>
       </div>
       <div className="desk">
