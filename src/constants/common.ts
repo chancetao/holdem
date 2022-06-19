@@ -2,8 +2,6 @@ export const SERVER_PORT = 8888;
 
 export const CLIENT_PORT = 3000;
 
-export const NAMES = ["Andy", "Bob", "Carl", "Dylan", "Emilie", "Felicia", "Georgia", "Henry", "Isabella", "John"];
-
 export const COLORS = [
   "#619AFF",
   "#47DAD7",
@@ -17,7 +15,7 @@ export const COLORS = [
   "#1AAF8B",
 ];
 
-export const SUITS = ["Spade", "Heart", "Diamond", "Club"];
+export const SUITS = ["spade", "heart", "diamond", "club"];
 
 export const DECKS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
 

@@ -1,14 +1,32 @@
-import { Socket } from "socket.io-client";
-import { User } from "./connection";
+// import { Socket } from "socket.io";
+import { PlayerProfile } from "../types/common";
+
+import generator from "../utils/generator";
 
 class Player {
-  profile: User;
+  readonly profile: PlayerProfile;
 
-  socket: Socket;
+  // ready to start new round
+  ready: boolean;
 
-  constructor(socket: Socket, profile: User) {
-    this.profile = profile;
-    this.socket = socket;
+  isSmallBlind: boolean;
+
+  isBigBlind: boolean;
+
+  allIn: boolean;
+
+  chips: number;
+
+  handCards: [string, string] | [];
+
+  constructor() {
+    this.profile = generator.generatePlayerProfile();
+    this.ready = false;
+    this.isBigBlind = false;
+    this.isSmallBlind = false;
+    this.allIn = false;
+    this.chips = 1000;
+    this.handCards = [];
   }
 }
 

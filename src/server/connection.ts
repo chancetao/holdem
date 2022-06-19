@@ -1,32 +1,18 @@
 import { randomUUID } from "crypto";
 import { Server, Socket } from "socket.io";
-import utils from "../utils/avatar";
+import { IMessage, IPlayer, PlayerProfile } from "../types/common";
 
-import { COLORS, NAMES } from "../constants/common";
+import Player from "./player";
 import Deck from "./deck";
 
-export interface User {
-  id: string
-  color: string
-  name: string
-  avatar?: string
-}
-
-export interface Message {
-  id: string
-  user: User
-  content: string
-  time: number
-}
-
-const defaultUser: User = {
+const defaultUser: PlayerProfile = {
   id: randomUUID(),
   color: "white",
   name: "Dealer",
 };
 
-let messages = new Set<Message>();
-const users = new Map<Socket, User>();
+let messages = new Set<IMessage>();
+const players = new Map<Socket, IPlayer>();
 
 class Connection {
   socket: Socket;
@@ -44,6 +30,7 @@ class Connection {
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
     socket.on("sit_down", () => this.connect());
+    socket.on("getReady", () => this.handleReceived("getReady"));
     socket.on("disconnect", () => this.disconnect());
     socket.on("connect_error", (err) => {
       // eslint-disable-next-line no-console
@@ -51,8 +38,8 @@ class Connection {
     });
   }
 
-  sendMessage(msg: Message) {
-    this.io.sockets.emit("message", { msg, users: Array.from(users.values()) });
+  sendMessage(msg: IMessage) {
+    this.io.sockets.emit("message", { msg, users: Array.from(players.values()) });
   }
 
   getMessages() {
@@ -62,7 +49,7 @@ class Connection {
   handleMessage(val: string) {
     const msg = {
       id: randomUUID(),
-      user: users.get(this.socket) || defaultUser,
+      player: players.get(this.socket)?.profile || defaultUser,
       content: val,
       time: Date.now(),
     };
@@ -76,21 +63,44 @@ class Connection {
     this.sendMessage(msg);
   }
 
+  handleReceived(type: string) {
+    const player = players.get(this.socket) as IPlayer;
+
+    switch (type) {
+      case "getReady":
+        players.set(this.socket, {
+          ...player,
+          ready: true,
+        });
+        this.socket.emit("received", type);
+        break;
+      default:
+    }
+
+    if (!Array.from(players.values()).map((item) => item.ready).includes(false)) {
+      this.deck.shuffle();
+      this.handleStartNextGround();
+    }
+  }
+
+  handleStartNextGround() {
+    Array.from(players.entries()).forEach(([socket, value]) => {
+      const handCards = this.deck.deal(2) as [string, string];
+      this.io.to(socket.id).emit("deal", handCards);
+      players.set(socket, { ...value, handCards });
+    });
+  }
+
   connect() {
-    const user: User = {
-      id: randomUUID(),
-      color: COLORS[Math.floor(Math.random() * 10)],
-      name: NAMES[Math.floor(Math.random() * 10)],
-      avatar: utils.generateAvatar(),
-    };
-    users.set(this.socket, user);
+    const user: IPlayer = new Player();
+    players.set(this.socket, user);
 
     this.socket.emit("identify", user);
 
     const msg = {
       id: randomUUID(),
-      user: defaultUser,
-      content: `${user.name} sat down.`,
+      player: defaultUser,
+      content: `${user.profile?.name} sat down.`,
       time: Date.now(),
     };
     messages.add(msg);
@@ -100,12 +110,12 @@ class Connection {
   disconnect() {
     const msg = {
       id: randomUUID(),
-      user: defaultUser,
-      content: `${users.get(this.socket)?.name} has left the table.`,
+      player: defaultUser,
+      content: `${players.get(this.socket)?.profile?.name} has left the table.`,
       time: Date.now(),
     };
     messages.add(msg);
-    users.delete(this.socket);
+    players.delete(this.socket);
 
     this.sendMessage(msg);
   }

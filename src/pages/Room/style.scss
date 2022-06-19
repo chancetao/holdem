@@ -24,9 +24,9 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      width: 600px;
+      width: 500px;
       margin: 0 auto;
-      padding-top: 24px;
+      padding-top: 80px;
 
       button {
         border-radius: 20px;
@@ -53,31 +53,278 @@
 
       .self {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         position: absolute;
-        bottom: 0;
-        left: 350px;
-        font-weight: bolder;
-        width: 50px;
-        height: 50px;
+        left: 310px;
+        top: 240px;
+
+        .top {
+          display: flex;
+          align-items: center;
+          font-weight: bolder;
+          gap: 8px;
+  
+          .avatar {
+            display: inline-block;
+            flex: 0 0 60px;
+          }
+  
+          .name {
+            font-size: 22px;
+            span {
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              gap: 8px;
+            }
+  
+            img {
+              height: 22px;
+            }
+          }
+        }
+
+        .hand-cards {
+          display: flex;
+          flex-direction: row;
+
+          .card:nth-child(1) {
+            position: relative;
+            right: -22px;
+          }
+
+          .card:nth-child(2) {
+            position: relative;
+            left: -22px;
+
+          }
+        }
+
+        .card {
+          background-image: url("../../assets/deck.png");
+            background-size: 1040px auto;
+            border-radius: 8px 8px 0 0;
+            height: 100%;
+            box-shadow: 0 0 3px 0 #808080;
+            overflow: hidden;
+            width: 72px;
+            height: 107px;
+            /**
+           * CSS Sprites
+           */
+          &.card-As {
+            background-position: 0.2% 0.5%;
+          }
+          &.card-Ah {
+            background-position: 0.2% 99.3%;
+          }
+          &.card-Ad {
+            background-position: 0.2% 66.5%;
+          }
+          &.card-Ac {
+            background-position: 0.2% 33.3%;
+          }
+          &.card-Ks {
+            background-position: 7.9% 0.5%;
+          }
+          &.card-Kh {
+            background-position: 7.9% 99.3%;
+          }
+          &.card-Kd {
+            background-position: 7.9% 66.5%;
+          }
+          &.card-Kc {
+            background-position: 7.9% 33.3%;
+          }
+          &.card-Qs {
+            background-position: 15.5% 0.5%;
+          }
+          &.card-Qh {
+            background-position: 15.5% 99.3%;
+          }
+          &.card-Qd {
+            background-position: 15.5% 66.5%;
+          }
+          &.card-Qc {
+            background-position: 15.5% 33.3%;
+          }
+          &.card-Js {
+            background-position: 23.2% 0.5%;
+          }
+          &.card-Jh {
+            background-position: 23.2% 99.3%;
+          }
+          &.card-Jd {
+            background-position: 23.2% 66.5%;
+          }
+          &.card-Jc {
+            background-position: 23.2% 33.3%;
+          }
+          &.card-Ts {
+            background-position: 30.9% 0.5%;
+          }
+          &.card-Th {
+            background-position: 30.9% 99.3%;
+          }
+          &.card-Td {
+            background-position: 30.9% 66.5%;
+          }
+          &.card-Tc {
+            background-position: 30.9% 33.3%;
+          }
+          &.card-9s {
+            background-position: 38.6% 0.5%;
+          }
+          &.card-9h {
+            background-position: 38.6% 99.3%;
+          }
+          &.card-9d {
+            background-position: 38.6% 66.5%;
+          }
+          &.card-9c {
+            background-position: 38.6% 33.3%;
+          }
+          &.card-8s {
+            background-position: 46.3% 0.5%;
+          }
+          &.card-8h {
+            background-position: 46.3% 99.3%;
+          }
+          &.card-8d {
+            background-position: 46.3% 66.5%;
+          }
+          &.card-8c {
+            background-position: 46.3% 33.3%;
+          }
+          &.card-7s {
+            background-position: 53.8% 0.5%;
+          }
+          &.card-7h {
+            background-position: 53.8% 99.3%;
+          }
+          &.card-7d {
+            background-position: 53.8% 66.5%;
+          }
+          &.card-7c {
+            background-position: 53.8% 33.3%;
+          }
+          &.card-6s {
+            background-position: 61.5% 0.5%;
+          }
+          &.card-6h {
+            background-position: 61.5% 99.3%;
+          }
+          &.card-6d {
+            background-position: 61.5% 66.5%;
+          }
+          &.card-6c {
+            background-position: 61.5% 33.3%;
+          }
+          &.card-5s {
+            background-position: 69.2% 0.5%;
+          }
+          &.card-5h {
+            background-position: 69.2% 99.3%;
+          }
+          &.card-5d {
+            background-position: 69.2% 66.5%;
+          }
+          &.card-5c {
+            background-position: 69.2% 33.3%;
+          }
+          &.card-4s {
+            background-position: 76.8% 0.5%;
+          }
+          &.card-4h {
+            background-position: 76.8% 99.3%;
+          }
+          &.card-4d {
+            background-position: 76.8% 66.5%;
+          }
+          &.card-4c {
+            background-position: 76.8% 33.3%;
+          }
+          &.card-3s {
+            background-position: 84.5% 0.5%;
+          }
+          &.card-3h {
+            background-position: 84.5% 99.3%;
+          }
+          &.card-3d {
+            background-position: 84.5% 66.5%;
+          }
+          &.card-3c {
+            background-position: 84.5% 33.3%;
+          }
+          &.card-2s {
+            background-position: 92.1% 0.5%;
+          }
+          &.card-2h {
+            background-position: 92.1% 99.3%;
+          }
+          &.card-2d {
+            background-position: 92.1% 66.5%;
+          }
+          &.card-2c {
+            background-position: 92.1% 33.3%;
+          }
+          &.card-back {
+            background-position: 99.8% 33.3%;
+          }
+        }
+        
       }
 
       .player {
         display: flex;
         align-items: center;
+        flex-direction: column;
         position: absolute;
         font-weight: bolder;
-        width: 50px;
-        height: 50px;
         gap: 8px;
 
-        .avatar {
-          display: inline-block;
-          flex: 0 0 48px;
+        .top {
+          display: flex;
+
+          .avatar {
+            display: inline-block;
+            flex: 0 0 32px;
+          }
+    
         }
 
-        .name {
+        .hand-cards {
+          display: flex;
+          flex-direction: row;
 
+          .card:nth-child(1) {
+            position: relative;
+            right: -20px;
+          }
+
+          .card:nth-child(2) {
+            position: relative;
+            left: -20px;
+
+          }
+        }
+
+
+
+        .card {
+          background-image: url("../../assets/deck.png");
+            background-size: 750px auto;
+            border-radius: 8px 8px 0 0;
+            height: 100%;
+            box-shadow: 0 0 3px 0 #808080;
+            overflow: hidden;
+            width: 52px;
+            height: 77px;
+            background-position: 99.8% 33.3%;
+          }
+
+        .name {
           span {
             display: flex;
             flex-direction: row;
@@ -91,38 +338,38 @@
         }
 
         &.left1,&.right7 {
-          bottom: 0px;
-          left: 110px;
+          bottom: -50px;
+          left: 70px;
         }
 
         &.left2,&.right6 {
-          bottom: 150px;
-          left: 0;
+          bottom: 140px;
+          left: -85px;
         }
 
         &.left3,&.right5 {
-          bottom: 300px;
-          left: 110px;
+          bottom: 320px;
+          left: 70px;
         }
 
         &.left4,&.right4 {
-          bottom: 300px;
-          left: 350px;
+          bottom: 320px;
+          left: 320px;
         }
 
         &.left5,&.right3 {
-          bottom: 300px;
-          right: 100px;
+          bottom: 320px;
+          right: 70px;
         }
 
         &.left6,&.right2 {
-          bottom: 150px;
-          right: 0px;
+          bottom: 140px;
+          right: -70px;
         }
 
         &.left7,&.right1 {
-          bottom: 0px;
-          right: 110px;
+          bottom: -50px;
+          right: 70px;
         }
       }
     }

@@ -1,12 +1,12 @@
 import React, { useState, FormEvent, RefObject } from "react";
 import { Socket } from "socket.io-client";
 import { Button } from "@mui/material";
-import { Message } from "@/server/connection";
+import { IMessage } from "@/types/common";
 
 import "./style.scss";
 
 interface Props {
-  messages: Record<string, Message> | undefined;
+  messages: Record<string, IMessage> | undefined;
   socket: Socket | undefined;
   recordRef: RefObject<HTMLDivElement>;
 }
@@ -31,19 +31,19 @@ function Connection(props: Props) {
             .map((item) => (
               <li
                 key={item.id}
-                className={item.user.name === "Dealer" ? "dealer" : ""}
+                className={item.player.name === "Dealer" ? "dealer" : ""}
               >
                 <div
                   className="avatar"
                   // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{ __html: (item.user.avatar as string) }}
+                  dangerouslySetInnerHTML={{ __html: item.player.avatar as string }}
                 />
                 <div className="content">
                   <div className="content-top">
-                    {item.user.name !== "Dealer" && (
-                    <span className="name" style={{ color: item.user.color }}>
-                      {item.user.name}
-                    </span>
+                    {item.player.name !== "Dealer" && (
+                      <span className="name" style={{ color: item.player.color }}>
+                        {item.player.name}
+                      </span>
                     )}
                     <span className="time">
                       {new Date(item.time).toLocaleTimeString()}
