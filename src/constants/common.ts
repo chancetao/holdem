@@ -17,7 +17,7 @@ export const COLORS = [
 
 export const SUITS = ["spade", "heart", "diamond", "club"];
 
-export const DECKS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
+export const RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
 
 export const CARDS = [
   "As", "Ah", "Ad", "Ac",
@@ -36,9 +36,9 @@ export const CARDS = [
 ];
 
 export enum HandRanking {
-  HighCard = 1,
+  HighCard,
   OnePair,
-  TwoPair,
+  TwoPairs,
   ThreeOfAKind,
   Straight,
   Flush,
@@ -47,3 +47,16 @@ export enum HandRanking {
   StraightFlush,
   RoyalStraightFlush,
 }
+
+export const HandRankingText = {
+  [HandRanking.HighCard]: "High card",
+  [HandRanking.OnePair]: "One pair",
+  [HandRanking.TwoPairs]: "Two pairs",
+  [HandRanking.ThreeOfAKind]: "Three of a kind",
+  [HandRanking.Straight]: "Straight",
+  [HandRanking.Flush]: "Flush",
+  [HandRanking.FullHouse]: "Full house",
+  [HandRanking.FourOfAKind]: "Four of a kind",
+  [HandRanking.StraightFlush]: "Straight flush",
+  [HandRanking.RoyalStraightFlush]: "Royal straight flush",
+};

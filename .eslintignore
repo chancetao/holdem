@@ -1,3 +1,4 @@
 .eslintrc.js
 vite.config.ts
 commitlint.config.js
+jest.config.js

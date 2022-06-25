@@ -1,4 +1,4 @@
-import { HandRanking, RANKS } from "@/constants/common";
+import { HandRanking, HandRankingText, RANKS } from "../constants/common";
 
 function sortBySuit(a: string, b: string) {
   return a[1] > b[1] ? -1 : 1;
@@ -12,20 +12,62 @@ function referee(boardCards: string[], handCards: string[]): string | number[] {
   const cards = [...boardCards, ...handCards];
   const res: string | number[] = [];
 
-  let handRank: HandRanking | undefined;
-  cards.sort(sortBySuit);
+  const reg = /(\w)\1+/ig;
 
-  const suits = cards.map((item) => item[1]).join("");
+  cards.sort(sortByRank);
+  const ranks = cards.map((item) => item[0]).join("");
+  const rankMatch = ranks.match(reg);
 
-  const match = suits.match(/(\w)\1+/ig);
+  const minusPrevRanks = ranks.split("")
+    .filter((item, index, arr) => arr.indexOf(item) === index)
+    .map((item, index, arr) => {
+      if (index <= arr.length - 2) {
+        return RANKS.indexOf(arr[index + 1]) - RANKS.indexOf(item);
+      }
+      return item;
+    });
 
-  if (match?.some((item) => item.length === 5)) {
-    handRank = HandRanking.Flush;
+  console.log("minusPreRanks", minusPrevRanks);
+
+  if (rankMatch?.some((item) => item.length === 2)) {
+    res[0] = HandRanking.OnePair;
+    if (rankMatch.length >= 2) {
+      res[0] = HandRanking.TwoPairs;
+    }
   }
 
-  console.log(cards, handRank);
-  cards.sort(sortByRank);
-  console.log(cards);
+  if (rankMatch?.some((item) => item.length === 3)) {
+    res[0] = HandRanking.ThreeOfAKind;
+    if (rankMatch?.some((item) => item.length === 2)) {
+      res[0] = HandRanking.FullHouse;
+    }
+  }
+
+  if (minusPrevRanks.join("").includes("1111")) {
+    if (!(res[0] > HandRanking.Straight)) {
+      res[0] = HandRanking.Straight;
+    }
+  }
+
+  if (rankMatch?.some((item) => item.length === 4)) {
+    res[0] = HandRanking.FourOfAKind;
+  }
+
+  cards.sort(sortBySuit);
+  const suits = cards.map((item) => item[1]).join("");
+  const suitMatch = suits.match(/(\w)\1+/ig);
+
+  if (suitMatch?.some((item) => item.length === 5)) {
+    if (!(res[0] > HandRanking.Flush)) {
+      res[0] = HandRanking.Flush;
+    }
+  }
+
+  if (!rankMatch && !res[0]) {
+    res[0] = HandRanking.HighCard;
+  }
+
+  console.log(cards, HandRankingText[res[0] as HandRanking]);
 
   return res;
 }
