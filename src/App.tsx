@@ -10,7 +10,7 @@ function App() {
     const deck = new Deck();
     deck.shuffle();
 
-    referee(deck.deal(5), deck.deal(2));
+    referee(deck.deal(7));
   });
 
   return (
