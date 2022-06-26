@@ -1,7 +1,7 @@
-import { HandRanking, HandRankingText, RANKS } from "../constants/common";
+import { HandRanking, RANKS } from "../constants/common";
 
 interface RefereeValue {
-  hand: HandRanking
+  rank: HandRanking
   cards: string[]
   weight: string
 }
@@ -55,7 +55,7 @@ function isStraightFlush(cards: string[], suitMatch: string[]): HandRanking {
   return res;
 }
 
-function getHand(cards: string[]): number {
+function getRank(cards: string[]): number {
   let res: HandRanking = 0;
 
   cards.sort(sortByRank);
@@ -112,9 +112,8 @@ function getWeight(cards: string[]): string {
     .join("");
 }
 
-function handleHighCard(sources: string[]): Omit<RefereeValue, "hand"> {
-  const ranks = [...sources];
-  ranks.sort(sortByRank);
+function handleHighCard(sources: string[]): Omit<RefereeValue, "rank"> {
+  const ranks = [...sources].sort(sortByRank);
 
   const cards = ranks.reverse().slice(0, 5);
   const weight = getWeight(cards);
@@ -122,9 +121,8 @@ function handleHighCard(sources: string[]): Omit<RefereeValue, "hand"> {
   return { cards, weight: `${HandRanking.HighCard}${weight}` };
 }
 
-function handleOnePair(sources: string[]): Omit<RefereeValue, "hand"> {
-  const sortedSources = [...sources];
-  sortedSources.sort(sortByRank);
+function handleOnePair(sources: string[]): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank);
   const target = (sortedSources.map((item) => item[0]).join("").match(reg) as string[])[0][0];
 
   const pair = sources.filter((item) => item[0] === target);
@@ -138,9 +136,8 @@ function handleOnePair(sources: string[]): Omit<RefereeValue, "hand"> {
   return { cards, weight: `${HandRanking.OnePair}${weight}` };
 }
 
-function handleTwoPairs(sources: string[]): Omit<RefereeValue, "hand"> {
-  const sortedSources = [...sources];
-  sortedSources.sort(sortByRank).reverse();
+function handleTwoPairs(sources: string[]): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank).reverse();
   const target = (sortedSources.map((item) => item[0]).join("").match(reg) as string[]);
 
   target.sort(sortByRank).reverse();
@@ -156,9 +153,8 @@ function handleTwoPairs(sources: string[]): Omit<RefereeValue, "hand"> {
   return { cards, weight: `${HandRanking.TwoPairs}${weight}` };
 }
 
-function handleThreeOfAKind(sources: string[]): Omit<RefereeValue, "hand"> {
-  const sortedSources = [...sources];
-  sortedSources.sort(sortByRank).reverse();
+function handleThreeOfAKind(sources: string[]): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank).reverse();
 
   const target = (sortedSources.map((item) => item[0]).join("").match(reg) as string[]);
 
@@ -171,9 +167,8 @@ function handleThreeOfAKind(sources: string[]): Omit<RefereeValue, "hand"> {
   return { cards, weight: `${HandRanking.ThreeOfAKind}${weight}` };
 }
 
-function handleStraight(sources: string[]): Omit<RefereeValue, "hand"> {
-  const sortedSources = [...sources];
-  sortedSources.sort(sortByRank);
+function handleStraight(sources: string[], rank?: HandRanking): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank);
   const minusPrevRanks = getMinusPreRanks(sortedSources).join("");
 
   const filteredSources = sortedSources
@@ -204,12 +199,72 @@ function handleStraight(sources: string[]): Omit<RefereeValue, "hand"> {
     }
   }
 
-  return { cards, weight: `${HandRanking.Straight}${weight}` };
+  return { cards, weight: `${rank || HandRanking.Straight}${weight}` };
 }
 
-function getValues(cards: string[], hand: HandRanking): Omit<RefereeValue, "hand"> {
-  let values: Omit<RefereeValue, "hand"> = { cards: [], weight: "" };
-  switch (hand) {
+function handleFlush(sources: string[]): Omit<RefereeValue, "rank"> {
+  const suits = sources.map((item) => item[1]).join("");
+  const suitMatch = suits.match(/(\w)\1+/ig)?.filter((item) => item.length >= 5);
+
+  const cards = sources.filter((item) => item[1] === (suitMatch as string[])[0][0]).slice(0, 5);
+  cards.sort(sortByRank).reverse();
+
+  return { cards, weight: `${HandRanking.Flush}${getWeight(cards)}` };
+}
+
+function handleFullHouse(sources: string[]): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank).reverse();
+
+  const ranks = sortedSources.map((item) => item[0]).join("");
+  const rankMatch = ranks.match(reg);
+
+  const three = rankMatch?.find((item) => item.length === 3);
+  const two = rankMatch?.find((item) => item.length === 2);
+
+  const cards = [];
+
+  cards.push(...sources.filter((item) => item[0] === (three as string)[0]));
+  cards.push(...sources.filter((item) => item[0] === (two as string)[0]));
+
+  return { cards, weight: `${HandRanking.FullHouse}${getWeight(cards)}` };
+}
+
+function handleFourOfAKind(sources: string[]): Omit<RefereeValue, "rank"> {
+  const sortedSources = [...sources].sort(sortByRank).reverse();
+
+  const ranks = sortedSources.map((item) => item[0]).join("");
+  const rankMatch = ranks.match(reg);
+
+  const four = rankMatch?.find((item) => item.length === 4);
+  const rest = sortedSources.filter((item) => item[0] !== (four as string)[0]);
+
+  const cards = sortedSources.filter((item) => item[0] === (four as string)[0]).concat(rest[0]);
+
+  return { cards, weight: `${HandRanking.FourOfAKind}${getWeight(cards)}` };
+}
+
+function handleStraightFlush(sources: string[]): Omit<RefereeValue, "rank"> {
+  const suits = sources.map((item) => item[1]).join("");
+  const suitMatch = suits.match(/(\w)\1+/ig)?.filter((item) => item.length >= 5);
+  const cards = sources.filter((item) => item[1] === (suitMatch as string[])[0][0]);
+
+  return handleStraight(cards, HandRanking.StraightFlush);
+}
+
+function handleRoyalStraightFlush(sources: string[]): Omit<RefereeValue, "rank"> {
+  const suits = sources.map((item) => item[1]).join("");
+  const suitMatch = suits.match(/(\w)\1+/ig)?.filter((item) => item.length >= 5);
+
+  const ranks = RANKS.slice(8);
+  const cards = ranks.map((item) => `${item}${(suitMatch as string[])[0][0]}`);
+
+  return { cards, weight: `${HandRanking.RoyalStraightFlush}` };
+}
+
+function getValues(cards: string[], rank: HandRanking): Omit<RefereeValue, "rank"> {
+  let values: Omit<RefereeValue, "rank"> = { cards: [], weight: "" };
+
+  switch (rank) {
     case HandRanking.HighCard:
       values = handleHighCard(cards);
       break;
@@ -225,6 +280,21 @@ function getValues(cards: string[], hand: HandRanking): Omit<RefereeValue, "hand
     case HandRanking.Straight:
       values = handleStraight(cards);
       break;
+    case HandRanking.Flush:
+      values = handleFlush(cards);
+      break;
+    case HandRanking.FullHouse:
+      values = handleFullHouse(cards);
+      break;
+    case HandRanking.FourOfAKind:
+      values = handleFourOfAKind(cards);
+      break;
+    case HandRanking.StraightFlush:
+      values = handleStraightFlush(cards);
+      break;
+    case HandRanking.RoyalStraightFlush:
+      values = handleRoyalStraightFlush(cards);
+      break;
     default:
   }
 
@@ -232,13 +302,11 @@ function getValues(cards: string[], hand: HandRanking): Omit<RefereeValue, "hand
 }
 
 function referee(cards: string[]): RefereeValue {
-  const hand = getHand(cards);
-  const res = getValues(cards, hand);
-
-  console.log(cards, HandRankingText[hand as HandRanking], res);
+  const rank = getRank(cards);
+  const res = getValues(cards, rank);
 
   return {
-    hand,
+    rank,
     ...res,
   };
 }
