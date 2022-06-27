@@ -8,6 +8,7 @@ import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
 import { IMessage, IPlayer } from "@/types/common";
+import referee from "@/utils/referee";
 
 // const { SmallBlind, BigBlind, AllIn } = Tags;
 
@@ -16,12 +17,13 @@ function Room() {
 
   const [messages, setMessages] = useState<Record<string, IMessage>>();
   const [users, setUsers] = useState<IPlayer[]>([]);
-  const [self, setSelf] = useState<IPlayer>();
+
+  const self = useRef<IPlayer>();
 
   const recordRef = useRef<HTMLDivElement>(null);
 
   const selfIndex = useMemo(
-    () => users.findIndex((item) => item.profile.id === self?.profile.id),
+    () => users.findIndex((item) => item.profile.id === self.current?.profile.id),
     [users, self],
   );
 
@@ -54,16 +56,16 @@ function Room() {
     };
 
     const identifyListener = (res: IPlayer) => {
-      setSelf(res);
+      self.current = res;
     };
 
     const receivedHandler = (type:string) => {
       switch (type) {
         case "getReady":
-          setSelf((prev) => ({
-            ...prev,
+          self.current = {
+            ...self.current,
             ready: true,
-          } as IPlayer));
+          } as IPlayer;
           break;
 
         default:
@@ -71,17 +73,35 @@ function Room() {
       }
     };
 
-    const dealListener = (handCards:string[]) => {
-      setSelf((prev) => ({
-        ...prev,
-        handCards,
-      } as IPlayer));
-    };
+    // const dealListener = (handCards:string[]) => {
+    //   console.log("self", handCards);
+
+    //   setSelf((prev) => ({
+    //     ...prev,
+    //     handCards,
+    //   } as IPlayer));
+    // };
+
+    // const handleDealing = (cards:string[] = []) => {
+    //   console.log("handleDealing", cards, handCardss, self?.handCards);
+
+    //   const result = referee([...cards, ...(handCardss as string[])]);
+    //   console.log("result", cards, handCardss, self?.handCards, result);
+    // };
 
     socket?.on("message", messageListener);
     socket?.on("identify", identifyListener);
     socket?.on("received", receivedHandler);
-    socket?.on("deal", dealListener);
+    socket?.on("deal", (handCards:string[]) => {
+      self.current = {
+        ...self.current,
+        handCards,
+      } as IPlayer;
+    });
+    socket?.on("dealing", (cards:string[] = []) => {
+      const result = referee([...cards, ...(self.current?.handCards as string[])]);
+      console.log("result", cards, self.current?.handCards, result);
+    });
     socket?.emit("sitDown");
     socket?.emit("getMessages");
 
@@ -122,10 +142,12 @@ function Room() {
               <div
                 className="avatar"
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: (self?.profile.avatar as string) }}
+                dangerouslySetInnerHTML={{ __html: (self.current?.profile.avatar as string) }}
               />
               <div className="name">
-                <span style={{ color: self?.profile.color }}>{self?.profile.name}</span>
+                <span style={{ color: self.current?.profile.color }}>
+                  {self.current?.profile.name}
+                </span>
                 <span>
                   <img src={Chips} alt="chip" />
                   1000
@@ -134,7 +156,7 @@ function Room() {
 
             </div>
             <div className="hand-cards">
-              {self?.handCards.map((item) => (
+              {self.current?.handCards.map((item) => (
                 <div key={item} className={`card card-${item}`} />
               ))}
             </div>
@@ -163,7 +185,7 @@ function Room() {
               </div>
 
               <div className="hand-cards">
-                {self?.handCards.map((card) => (
+                {self.current?.handCards.map((card) => (
                   <div key={card} className="card" />
                 ))}
               </div>
@@ -172,7 +194,7 @@ function Room() {
         </div>
         <div className="operation">
           {
-             !self?.ready ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
+             !self.current?.ready ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
                : (
                  <>
                    <Stack
