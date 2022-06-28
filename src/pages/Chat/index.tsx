@@ -11,7 +11,7 @@ interface Props {
   recordRef: RefObject<HTMLDivElement>;
 }
 
-function Connection(props: Props) {
+function Chat(props: Props) {
   const { messages, socket, recordRef } = props;
 
   const [inputVal, setInputVal] = useState("");
@@ -78,4 +78,4 @@ function Connection(props: Props) {
   );
 }
 
-export default Connection;
+export default Chat;
