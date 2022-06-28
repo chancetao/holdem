@@ -78,24 +78,17 @@ class Connection {
     }
 
     if (!Array.from(players.values()).map((item) => item.ready).includes(false)) {
+      this.deck.shuffle();
       this.handleStartNextGround();
     }
   }
 
   handleStartNextGround() {
-    this.deck.shuffle();
-
     Array.from(players.entries()).forEach(([socket, value]) => {
       const handCards = this.deck.deal(2) as [string, string];
       this.io.to(socket.id).emit("deal", handCards);
-      console.log("deck1", this.deck);
-
       players.set(socket, { ...value, handCards });
     });
-
-    const cards = this.deck.deal(5);
-    this.io.sockets.emit("dealing", cards);
-    console.log("deck", this.deck);
   }
 
   connect() {
