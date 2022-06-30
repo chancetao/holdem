@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Box, Button, Slider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
-import { SERVER_PORT } from "@/constants/common";
+import { PlayerStatus, SERVER_PORT } from "@/constants/common";
 // import Tags from "@/pages/components/Tags";
 import Chips from "@/assets/Chips.svg";
 
@@ -63,7 +63,7 @@ function Room() {
         case "getReady":
           setSelf((prev) => ({
             ...prev,
-            ready: true,
+            status: PlayerStatus.Ready,
           } as IPlayer));
           break;
 
@@ -156,7 +156,7 @@ function Room() {
         </div>
         <div className="operation">
           {
-             !self?.ready ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
+             !(self?.status === PlayerStatus.Ready) ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
                : (
                  <>
                    <Stack

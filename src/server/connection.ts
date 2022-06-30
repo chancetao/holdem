@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { Server, Socket } from "socket.io";
 import { IMessage, IPlayer, PlayerProfile } from "../types/common";
+import { PlayerStatus } from "../constants/common";
 
 import Player from "./player";
 import Deck from "./deck";
@@ -70,14 +71,16 @@ class Connection {
       case "getReady":
         players.set(this.socket, {
           ...player,
-          ready: true,
+          status: PlayerStatus.Ready,
         });
         this.socket.emit("received", type);
         break;
       default:
     }
 
-    if (!Array.from(players.values()).map((item) => item.ready).includes(false)) {
+    if (!Array.from(
+      players.values(),
+    ).map((item) => item.status === PlayerStatus.Ready).includes(false)) {
       this.deck.shuffle();
       this.handleStartNextGround();
     }

@@ -1,3 +1,5 @@
+import { PlayerStatus } from "@/constants/common";
+
 export interface PlayerProfile {
   id: string
   name: string
@@ -11,9 +13,8 @@ export interface IPlayer {
   isBigBlind: boolean
   allIn: boolean
   chips: number
-  ready: boolean
-
   handCards: [string, string] | []
+  status: PlayerStatus
 }
 
 export interface IMessage {

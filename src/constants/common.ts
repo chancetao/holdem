@@ -60,3 +60,10 @@ export const HandRankingText = {
   [HandRanking.StraightFlush]: "Straight flush",
   [HandRanking.RoyalStraightFlush]: "Royal straight flush",
 };
+
+export enum PlayerStatus {
+  Waiting = "Waiting",
+  Ready = "Ready",
+  Playing = "Playing",
+  Fold = "Fold",
+}

@@ -1,13 +1,11 @@
 // import { Socket } from "socket.io";
+import { PlayerStatus } from "../constants/common";
 import { PlayerProfile } from "../types/common";
 
 import generator from "../utils/generator";
 
 class Player {
   readonly profile: PlayerProfile;
-
-  // ready to start new round
-  ready: boolean;
 
   isSmallBlind: boolean;
 
@@ -19,14 +17,16 @@ class Player {
 
   handCards: [string, string] | [];
 
+  status: PlayerStatus;
+
   constructor() {
     this.profile = generator.generatePlayerProfile();
-    this.ready = false;
     this.isBigBlind = false;
     this.isSmallBlind = false;
     this.allIn = false;
     this.chips = 1000;
     this.handCards = [];
+    this.status = PlayerStatus.Waiting;
   }
 }
 
