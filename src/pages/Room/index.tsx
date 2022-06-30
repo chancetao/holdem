@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Box, Button, Slider, Stack } from "@mui/material";
-import Connection from "../Connection";
+import ChatRoom from "../Chat";
 import { SERVER_PORT } from "@/constants/common";
 // import Tags from "@/pages/components/Tags";
 import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
 import { IMessage, IPlayer } from "@/types/common";
+import Ranking from "../Ranking";
 
 // const { SmallBlind, BigBlind, AllIn } = Tags;
 
@@ -96,24 +97,7 @@ function Room() {
 
   return (
     <div className="room">
-      <div className="rank">
-        RANK
-        <ul>
-          {users
-            .map((item, index) => (
-              <div
-                key={item.profile.id}
-                className={`player ${selfIndex > index ? "left" : "right"}${Math.abs(
-                  selfIndex - index,
-                )}`}
-              >
-                {index + 1}
-                .
-                {item.profile.name}
-              </div>
-            ))}
-        </ul>
-      </div>
+      <Ranking users={users} selfIndex={selfIndex} />
       <div className="desk">
         <div className="felt">
 
@@ -192,7 +176,7 @@ function Room() {
         </div>
       </div>
       <div className="right">
-        <Connection recordRef={recordRef} messages={messages} socket={socket} />
+        <ChatRoom recordRef={recordRef} messages={messages} socket={socket} />
       </div>
     </div>
   );
