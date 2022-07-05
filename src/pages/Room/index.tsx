@@ -112,7 +112,7 @@ function Room() {
                 <span style={{ color: self?.profile.color }}>{self?.profile.name}</span>
                 <span>
                   <img src={Chips} alt="chip" />
-                  1000
+                  {self?.chips}
                 </span>
               </div>
 

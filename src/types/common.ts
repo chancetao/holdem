@@ -15,6 +15,7 @@ export interface IPlayer {
   chips: number
   handCards: [string, string] | []
   status: PlayerStatus
+  det: number
 }
 
 export interface IMessage {

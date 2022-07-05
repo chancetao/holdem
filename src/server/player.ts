@@ -11,13 +11,15 @@ class Player {
 
   isBigBlind: boolean;
 
-  allIn: boolean;
-
   chips: number;
 
   handCards: [string, string] | [];
 
   status: PlayerStatus;
+
+  det: number;
+
+  allIn: boolean;
 
   constructor() {
     this.profile = generator.generatePlayerProfile();
@@ -27,6 +29,8 @@ class Player {
     this.chips = 1000;
     this.handCards = [];
     this.status = PlayerStatus.Waiting;
+
+    this.det = 0;
   }
 }
 
