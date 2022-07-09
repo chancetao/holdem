@@ -7,8 +7,9 @@ import { PlayerStatus, SERVER_PORT } from "@/constants/common";
 import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
-import { IMessage, IPlayer } from "@/types/common";
+import { IMessage } from "@/types/common";
 import Ranking from "../Ranking";
+import Player from "@/server/player";
 
 // const { SmallBlind, BigBlind, AllIn } = Tags;
 
@@ -16,8 +17,8 @@ function Room() {
   const [socket, setSocket] = useState<Socket>();
 
   const [messages, setMessages] = useState<Record<string, IMessage>>();
-  const [users, setUsers] = useState<IPlayer[]>([]);
-  const [self, setSelf] = useState<IPlayer>();
+  const [users, setUsers] = useState<Player[]>([]);
+  const [self, setSelf] = useState<Player>();
 
   const recordRef = useRef<HTMLDivElement>(null);
 
@@ -35,8 +36,7 @@ function Room() {
   }, [setSocket]);
 
   useEffect(() => {
-    let timeout:any;
-    const messageListener = (response: { msg: IMessage; users: IPlayer[] }) => {
+    const messageListener = (response: { msg: IMessage; users: Player[] }) => {
       setMessages((prev) => {
         const newMsgs = { ...prev };
         newMsgs[response.msg.id] = response.msg;
@@ -45,16 +45,14 @@ function Room() {
 
       setUsers(response.users);
 
-      clearTimeout(timeout);
-
-      timeout = setTimeout(() => {
+      setTimeout(() => {
         if (recordRef.current) {
           recordRef.current.scrollTop = recordRef.current?.scrollHeight ?? 0;
         }
       }, 0);
     };
 
-    const identifyListener = (res: IPlayer) => {
+    const identifyListener = (res: Player) => {
       setSelf(res);
     };
 
@@ -64,7 +62,7 @@ function Room() {
           setSelf((prev) => ({
             ...prev,
             status: PlayerStatus.Ready,
-          } as IPlayer));
+          } as Player));
           break;
 
         default:
@@ -76,7 +74,7 @@ function Room() {
       setSelf((prev) => ({
         ...prev,
         handCards,
-      } as IPlayer));
+      } as Player));
     };
 
     socket?.on("message", messageListener);

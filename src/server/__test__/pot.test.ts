@@ -1,4 +1,4 @@
-import { IPlayer } from "@/types/common";
+import Player from "../player";
 import Pot from "../pot";
 
 const pot = new Pot();
@@ -7,37 +7,46 @@ const players = [
   {
     profile: { id: "A" },
     allIn: true,
-    det: 50,
+    bet: 50,
   },
   {
     profile: { id: "B" },
-    allIn: true,
-    det: 250,
+    allIn: false,
+    bet: 250,
   },
   {
     profile: { id: "C" },
-    allIn: true,
-    det: 350,
+    allIn: false,
+    bet: 350,
   },
   {
     profile: { id: "D" },
     allIn: false,
-    det: 800,
+    bet: 50,
   },
   {
     profile: { id: "E" },
     allIn: false,
-    det: 800,
+    bet: 800,
   },
   {
     profile: { id: "F" },
     allIn: false,
-    det: 500,
+    bet: 500,
   },
 ];
 
-pot.allIn(players as IPlayer[]);
+pot.allIn(players as Player[]);
 
 test("test pot", () => {
-  expect(pot.pots).toEqual([]);
+  expect(pot.pots).toEqual([
+    {
+      amount: 300,
+      players: ["A", "B", "C", "D", "E", "F"],
+    },
+    {
+      amount: 1700,
+      players: ["B", "C", "D", "E", "F"],
+    },
+  ]);
 });

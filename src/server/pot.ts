@@ -1,4 +1,4 @@
-import { IPlayer } from "@/types/common";
+import Player from "./player";
 
 interface IPot {
   amount: number
@@ -17,7 +17,7 @@ class Pot {
     ];
   }
 
-  bet(amount: number, playerId: string) {
+  det(amount: number, playerId: string) {
     this.pots[0].amount += amount;
 
     if (!this.pots[0].players.includes(playerId)) {
@@ -25,30 +25,32 @@ class Pot {
     }
   }
 
-  allIn(players: IPlayer[]) {
+  allIn(players: Player[]) {
     this.pots = [];
     const allInPlayers = players.filter((item) => item.allIn === true);
     const restPlayers = players.filter((item) => item.allIn !== true);
-    allInPlayers.sort((a, b) => (a.det > b.det ? 1 : -1));
+    allInPlayers.sort((a, b) => (a.bet > b.bet ? 1 : -1));
 
     for (let i = 0; i < allInPlayers.length; i += 1) {
       if (i === 0) {
         this.pots.push({
           amount: [...allInPlayers.slice(i), ...restPlayers].reduce((prev, curr) => {
-            if (curr.det >= allInPlayers[i].det) {
-              return prev + allInPlayers[i].det;
+            if (curr.bet >= allInPlayers[i].bet) {
+              return prev + allInPlayers[i].bet;
             }
-            return prev + curr.det;
+            return prev + curr.bet;
           }, 0),
           players: players.map((item) => item.profile.id),
         });
       } else {
         this.pots.push({
           amount: [...allInPlayers.slice(i), ...restPlayers].reduce((prev, curr) => {
-            if (curr.det >= allInPlayers[i].det) {
-              return prev + allInPlayers[i].det - allInPlayers[i - 1].det;
+            if (curr.bet >= allInPlayers[i].bet) {
+              return prev + allInPlayers[i].bet - allInPlayers[i - 1].bet;
+            } if (curr.bet >= allInPlayers[i - 1].bet) {
+              return prev + curr.bet - allInPlayers[i - 1].bet;
             }
-            return prev + curr.det - allInPlayers[i - 1].det;
+            return prev;
           }, 0),
           players: [...allInPlayers.slice(i), ...restPlayers].map((item) => item.profile.id),
         });
@@ -57,8 +59,8 @@ class Pot {
 
     this.pots.push({
       amount: restPlayers.reduce((prev, curr) => {
-        if (curr.det >= allInPlayers[allInPlayers.length - 1].det) {
-          return prev + (curr.det - allInPlayers[allInPlayers.length - 1].det);
+        if (curr.bet >= allInPlayers[allInPlayers.length - 1].bet) {
+          return prev + (curr.bet - allInPlayers[allInPlayers.length - 1].bet);
         }
         return prev;
       }, 0),

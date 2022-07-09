@@ -5,7 +5,7 @@ import { PlayerProfile } from "../types/common";
 import generator from "../utils/generator";
 
 class Player {
-  readonly profile: PlayerProfile;
+  profile: PlayerProfile;
 
   isSmallBlind: boolean;
 
@@ -17,9 +17,11 @@ class Player {
 
   status: PlayerStatus;
 
-  det: number;
+  bet: number;
 
   allIn: boolean;
+
+  turn: string;
 
   constructor() {
     this.profile = generator.generatePlayerProfile();
@@ -30,7 +32,30 @@ class Player {
     this.handCards = [];
     this.status = PlayerStatus.Waiting;
 
-    this.det = 0;
+    this.bet = 0;
+    this.turn = "";
+  }
+
+  leftPlayer(players: Player[]) {
+    if (players.length <= 1) {
+      return null;
+    }
+    const index = players.findIndex((item) => item.profile.id === this.profile.id);
+    if (index === 0) {
+      return players[players.length - 1];
+    }
+    return players[index - 1];
+  }
+
+  rightPlayer(players: Player[]) {
+    if (players.length <= 1) {
+      return null;
+    }
+    const index = players.findIndex((item) => item.profile.id === this.profile.id);
+    if (index === players.length - 1) {
+      return players[0];
+    }
+    return players[index + 1];
   }
 }
 

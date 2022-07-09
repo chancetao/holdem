@@ -67,3 +67,10 @@ export enum PlayerStatus {
   Playing = "Playing",
   Fold = "Fold",
 }
+
+export enum GamePhase {
+  PreFlop = "PreFlop",
+  Flop = "Flop",
+  Turn = "Turn",
+  River = "River",
+}

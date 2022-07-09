@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Server, Socket } from "socket.io";
-import { IMessage, IPlayer, PlayerProfile } from "../types/common";
+import { IMessage, PlayerProfile } from "../types/common";
 import { PlayerStatus } from "../constants/common";
 
 import Player from "./player";
@@ -13,7 +13,7 @@ const defaultUser: PlayerProfile = {
 };
 
 let messages = new Set<IMessage>();
-const players = new Map<Socket, IPlayer>();
+const playersMap = new Map<Socket, Player>();
 
 class Connection {
   socket: Socket;
@@ -40,7 +40,7 @@ class Connection {
   }
 
   sendMessage(msg: IMessage) {
-    this.io.sockets.emit("message", { msg, users: Array.from(players.values()) });
+    this.io.sockets.emit("message", { msg, users: Array.from(playersMap.values()) });
   }
 
   getMessages() {
@@ -50,7 +50,7 @@ class Connection {
   handleMessage(val: string) {
     const msg = {
       id: randomUUID(),
-      player: players.get(this.socket)?.profile || defaultUser,
+      player: playersMap.get(this.socket)?.profile || defaultUser,
       content: val,
       time: Date.now(),
     };
@@ -65,21 +65,21 @@ class Connection {
   }
 
   handleReceived(type: string) {
-    const player = players.get(this.socket) as IPlayer;
+    const player = playersMap.get(this.socket) as Player;
 
     switch (type) {
       case "getReady":
-        players.set(this.socket, {
+        playersMap.set(this.socket, {
           ...player,
           status: PlayerStatus.Ready,
-        });
+        } as Player);
         this.socket.emit("received", type);
         break;
       default:
     }
 
     if (!Array.from(
-      players.values(),
+      playersMap.values(),
     ).map((item) => item.status === PlayerStatus.Ready).includes(false)) {
       this.deck.shuffle();
       this.handleStartNextGround();
@@ -87,16 +87,16 @@ class Connection {
   }
 
   handleStartNextGround() {
-    Array.from(players.entries()).forEach(([socket, value]) => {
+    Array.from(playersMap.entries()).forEach(([socket, value]) => {
       const handCards = this.deck.deal(2) as [string, string];
       this.io.to(socket.id).emit("deal", handCards);
-      players.set(socket, { ...value, handCards });
+      playersMap.set(socket, { ...value, handCards } as Player);
     });
   }
 
   connect() {
-    const user: IPlayer = new Player();
-    players.set(this.socket, user);
+    const user = new Player();
+    playersMap.set(this.socket, user);
 
     this.socket.emit("identify", user);
 
@@ -114,11 +114,11 @@ class Connection {
     const msg = {
       id: randomUUID(),
       player: defaultUser,
-      content: `${players.get(this.socket)?.profile?.name} has left the table.`,
+      content: `${playersMap.get(this.socket)?.profile?.name} has left the table.`,
       time: Date.now(),
     };
     messages.add(msg);
-    players.delete(this.socket);
+    playersMap.delete(this.socket);
 
     this.sendMessage(msg);
   }
