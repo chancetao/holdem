@@ -1,4 +1,5 @@
 // import { Socket } from "socket.io";
+import { Socket } from "socket.io";
 import { PlayerStatus } from "../constants/common";
 import { PlayerProfile } from "../types/common";
 
@@ -36,26 +37,30 @@ class Player {
     this.turn = "";
   }
 
-  leftPlayer(players: Player[]) {
-    if (players.length <= 1) {
+  static getLeftPlayer(players: Map<Socket, Player>, id: string) {
+    const keys = Array.from(players.keys());
+    const values = Array.from(players.values());
+    if (values.length <= 1) {
       return null;
     }
-    const index = players.findIndex((item) => item.profile.id === this.profile.id);
+    const index = values.findIndex((item) => item.profile.id === id);
     if (index === 0) {
-      return players[players.length - 1];
+      return keys[keys.length - 1];
     }
-    return players[index - 1];
+    return keys[index - 1];
   }
 
-  rightPlayer(players: Player[]) {
-    if (players.length <= 1) {
+  rightPlayer(players: Map<Socket, Player>) {
+    const keys = Array.from(players.keys());
+    const values = Array.from(players.values());
+    if (values.length <= 1) {
       return null;
     }
-    const index = players.findIndex((item) => item.profile.id === this.profile.id);
-    if (index === players.length - 1) {
-      return players[0];
+    const index = values.findIndex((item) => item.profile.id === this.profile.id);
+    if (index === keys.length - 1) {
+      return keys[0];
     }
-    return players[index + 1];
+    return keys[index + 1];
   }
 }
 

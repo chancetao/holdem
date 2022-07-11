@@ -5,6 +5,7 @@ import { PlayerStatus } from "../constants/common";
 
 import Player from "./player";
 import Deck from "./deck";
+import Game from "./game";
 
 const defaultUser: PlayerProfile = {
   id: randomUUID(),
@@ -92,6 +93,14 @@ class Connection {
       this.io.to(socket.id).emit("deal", handCards);
       playersMap.set(socket, { ...value, handCards } as Player);
     });
+
+    const game = new Game(
+      playersMap,
+      Array.from(playersMap.keys())[0],
+      this.io,
+      this.deck,
+      2,
+    );
   }
 
   connect() {

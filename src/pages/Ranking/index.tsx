@@ -1,8 +1,8 @@
 import React from "react";
-import { IPlayer } from "@/types/common";
+import Player from "@/server/player";
 
 interface Props {
-  users: IPlayer[]
+  users: Player[]
   selfIndex: number
 }
 

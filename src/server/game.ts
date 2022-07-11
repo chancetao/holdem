@@ -1,13 +1,14 @@
 import { Server, Socket } from "socket.io";
 
+import { GamePhase, PlayerStatus } from "../constants/common";
+
 import Deck from "./deck";
-import { GamePhase, PlayerStatus } from "@/constants/common";
 import Player from "./player";
 
 class Game {
   playersMap: Map<Socket, Player>;
 
-  sb: Socket;
+  sbKey: Socket;
 
   sbBet: number;
 
@@ -21,13 +22,13 @@ class Game {
 
   constructor(
     playersMap: Map<Socket, Player>,
-    sb: Socket,
+    sbKey: Socket,
     server: Server,
     deck: Deck,
     sbBet: number,
   ) {
     this.playersMap = playersMap;
-    this.sb = sb;
+    this.sbKey = sbKey;
     this.server = server;
     this.deck = deck;
     this.phase = GamePhase.PreFlop;
@@ -39,7 +40,13 @@ class Game {
   }
 
   initGame() {
-    Array.from(this.playersMap.keys()).forEach((item) => {
+    const playerKeys = Array.from(this.playersMap.keys());
+
+    if (playerKeys.length <= 1) {
+      return;
+    }
+
+    playerKeys.forEach((item) => {
       this.playersMap.set(item, {
         ...this.playersMap.get(item),
         isBigBlind: false,
@@ -48,22 +55,30 @@ class Game {
       } as Player);
     });
 
-    const sb = this.playersMap.get(this.sb) as Player;
-    const bb = sb?.leftPlayer(this.players) as Player;
+    const sb = this.playersMap.get(this.sbKey) as Player;
+
+    const bbKey = Player.getLeftPlayer(this.playersMap, sb.profile.id) as Socket;
+
+    const bb = this.playersMap.get(bbKey) as Player;
 
     sb.isSmallBlind = true;
-    sb.bet = this.smallBlindBet;
+    sb.bet = this.sbBet;
+    sb.chips -= this.sbBet;
 
     bb.isBigBlind = true;
-    bb.bet = this.smallBlindBet * 2;
+    bb.bet = this.sbBet * 2;
+    bb.chips -= bb.bet;
 
     this.turn = sb.profile.id;
 
-    this.players.forEach((_, index) => {
-      this.players[index].turn = this.turn;
+    playerKeys.forEach((item) => {
+      this.playersMap.set(item, {
+        ...this.playersMap.get(item),
+        turn: this.turn,
+      } as Player);
     });
 
-    this.server.sockets.emit("init", this.players);
+    this.server.sockets.emit("initGame", Array.from(this.playersMap.values()));
   }
 }
 

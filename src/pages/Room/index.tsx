@@ -53,6 +53,8 @@ function Room() {
     };
 
     const identifyListener = (res: Player) => {
+      console.log("self", res);
+
       setSelf(res);
     };
 
@@ -77,10 +79,19 @@ function Room() {
       } as Player));
     };
 
+    const initGame = (data: Player[]) => {
+      const mySelf = data.find((item) => item.profile.id === self?.profile.id);
+      console.log(self, data);
+
+      setSelf(mySelf);
+      setUsers(data);
+    };
+
     socket?.on("message", messageListener);
     socket?.on("identify", identifyListener);
     socket?.on("received", receivedHandler);
     socket?.on("deal", dealListener);
+    socket?.on("initGame", initGame);
     socket?.emit("sitDown");
     socket?.emit("getMessages");
 
@@ -139,7 +150,7 @@ function Room() {
                   <span style={{ color: item?.profile.color }}>{item?.profile.name}</span>
                   <span>
                     <img src={Chips} alt="chip" />
-                    1000
+                    {item.chips}
                   </span>
                 </div>
               </div>
