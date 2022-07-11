@@ -59,7 +59,7 @@
         justify-content: center;
         position: absolute;
         left: 310px;
-        bottom: -40px;
+        bottom: -65px;
 
         .top {
           display: flex;
@@ -69,11 +69,11 @@
   
           .avatar {
             display: inline-block;
-            flex: 0 0 60px;
+            flex: 0 0 50px;
           }
   
           .name {
-            font-size: 22px;
+            font-size: 20px;
             span {
               display: flex;
               flex-direction: row;
@@ -303,13 +303,12 @@
 
           .card:nth-child(1) {
             position: relative;
-            right: -20px;
+            right: -22px;
           }
 
           .card:nth-child(2) {
             position: relative;
-            left: -20px;
-
+            left: -22px;
           }
         }
 
@@ -317,13 +316,13 @@
 
         .card {
           background-image: url("../../assets/deck.png");
-            background-size: 750px auto;
+            background-size: 1040px auto;
             border-radius: 8px 8px 0 0;
             height: 100%;
             box-shadow: 0 0 3px 0 #808080;
             overflow: hidden;
-            width: 52px;
-            height: 77px;
+            width: 72px;
+            height: 107px;
             background-position: 99.8% 33.3%;
           }
 
@@ -341,7 +340,7 @@
         }
 
         &.left1,&.right7 {
-          bottom: -50px;
+          bottom: -65px;
           left: 70px;
         }
 
@@ -371,7 +370,7 @@
         }
 
         &.left7,&.right1 {
-          bottom: -50px;
+          bottom: -65px;
           right: 70px;
         }
       }

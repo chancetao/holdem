@@ -1,24 +1,25 @@
 .tag {
   display: inline-block;
-  font-size: 8px;
-  width: 30px;
-  height: 30px;
-  padding: 8px;
+  font-size: 12px;
+  width: 14px;
+  height: 14px;
+  padding: 6px;
   border-radius: 50%;
   text-align: center;
-  color: antiquewhite;
+  color: #FCF8E8;
   font-weight: bolder;
   
   &.small-blind {
-    background: blue;
+    background: #3330E4;
   }
 
   &.big-blind {
-    background: yellow;
-    color: slategray;
+    background: #FFC54D;
   }
 
   &.all-in {
-    background: red;
+    width: 50px;
+    border-radius: 14px;
+    background: #A10035;
   }
 }

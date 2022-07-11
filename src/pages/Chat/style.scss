@@ -59,6 +59,10 @@
       flex-direction: row;
       margin: 16px 10px 16px 0;
 
+      .content-text {
+        word-break: break-all;
+       }
+
       &.dealer {
         margin: 8px 10px 8px 0;
         .avatar {

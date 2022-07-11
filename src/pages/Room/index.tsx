@@ -3,15 +3,16 @@ import { io, Socket } from "socket.io-client";
 import { Box, Button, Slider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
 import { PlayerStatus, SERVER_PORT } from "@/constants/common";
-// import Tags from "@/pages/components/Tags";
+
 import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
 import { IMessage } from "@/types/common";
 import Ranking from "../Ranking";
 import Player from "@/server/player";
+import Tags from "@/components/Tags";
 
-// const { SmallBlind, BigBlind, AllIn } = Tags;
+const { SmallBlind, BigBlind, AllIn } = Tags;
 
 function Room() {
   const [socket, setSocket] = useState<Socket>();
@@ -26,6 +27,8 @@ function Room() {
     () => users.findIndex((item) => item.profile.id === self?.profile.id),
     [users, self],
   );
+
+  const disabled = useMemo(() => self?.profile.id !== self?.turn, [self]);
 
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:${SERVER_PORT}`);
@@ -53,8 +56,6 @@ function Room() {
     };
 
     const identifyListener = (res: Player) => {
-      console.log("self", res);
-
       setSelf(res);
     };
 
@@ -80,10 +81,6 @@ function Room() {
     };
 
     const initGame = (data: Player[]) => {
-      const mySelf = data.find((item) => item.profile.id === self?.profile.id);
-      console.log(self, data);
-
-      setSelf(mySelf);
       setUsers(data);
     };
 
@@ -100,6 +97,13 @@ function Room() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (users.length > 1) {
+      const mySelf = users.find((item) => item.profile.id === self?.profile.id);
+      setSelf(mySelf);
+    }
+  }, [users]);
+
   const handleGetReady = () => {
     socket?.emit("getReady");
   };
@@ -111,6 +115,16 @@ function Room() {
         <div className="felt">
 
           <div className="self">
+            <Stack
+              direction="row"
+              justifyContent="center"
+              spacing={1}
+            >
+              {self?.isSmallBlind && <SmallBlind />}
+              {self?.isBigBlind && <BigBlind />}
+              { self?.allIn && <AllIn /> }
+            </Stack>
+
             <div className="top">
               <div
                 className="avatar"
@@ -140,7 +154,17 @@ function Room() {
                 selfIndex - index,
               )}`}
             >
+              <Stack
+                direction="row"
+                justifyContent="center"
+                spacing={1}
+              >
+                {item?.isSmallBlind && <SmallBlind />}
+                {item?.isBigBlind && <BigBlind />}
+                {item?.allIn && <AllIn /> }
+              </Stack>
               <div className="top">
+
                 <div
                   className="avatar"
                 // eslint-disable-next-line react/no-danger
@@ -172,9 +196,28 @@ function Room() {
                      direction="row"
                      spacing={1}
                    >
-                     <Button variant="contained">Check</Button>
-                     <Button variant="contained">Call</Button>
-                     <Button variant="contained">Fold</Button>
+                     {self.showCheck && (
+                     <Button
+                       disabled={disabled}
+                       variant="contained"
+                     >
+                       Check
+                     </Button>
+                     )}
+                     {self.showCall && (
+                     <Button
+                       disabled={disabled}
+                       variant="contained"
+                     >
+                       Call
+                     </Button>
+                     )}
+                     <Button
+                       disabled={disabled}
+                       variant="contained"
+                     >
+                       Fold
+                     </Button>
                    </Stack>
                    <Box sx={{ width: 200 }}>
                      <Slider />

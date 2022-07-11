@@ -24,6 +24,10 @@ class Player {
 
   turn: string;
 
+  showCheck: boolean;
+
+  showCall: boolean;
+
   constructor() {
     this.profile = generator.generatePlayerProfile();
     this.isBigBlind = false;
@@ -35,6 +39,8 @@ class Player {
 
     this.bet = 0;
     this.turn = "";
+    this.showCheck = true;
+    this.showCall = true;
   }
 
   static getLeftPlayer(players: Map<Socket, Player>, id: string) {
@@ -50,13 +56,13 @@ class Player {
     return keys[index - 1];
   }
 
-  rightPlayer(players: Map<Socket, Player>) {
+  static getRightPlayer(players: Map<Socket, Player>, id: string) {
     const keys = Array.from(players.keys());
     const values = Array.from(players.values());
     if (values.length <= 1) {
       return null;
     }
-    const index = values.findIndex((item) => item.profile.id === this.profile.id);
+    const index = values.findIndex((item) => item.profile.id === id);
     if (index === keys.length - 1) {
       return keys[0];
     }

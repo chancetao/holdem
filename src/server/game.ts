@@ -64,6 +64,7 @@ class Game {
     sb.isSmallBlind = true;
     sb.bet = this.sbBet;
     sb.chips -= this.sbBet;
+    sb.showCheck = false;
 
     bb.isBigBlind = true;
     bb.bet = this.sbBet * 2;

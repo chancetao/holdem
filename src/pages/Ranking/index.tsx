@@ -13,6 +13,7 @@ function Ranking(props: Props) {
       RANK
       <ul>
         {users
+          .sort((a, b) => (a.chips > b.chips ? -1 : 1))
           .map((item, index) => (
             <div
               key={item.profile.id}
