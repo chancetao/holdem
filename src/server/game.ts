@@ -4,6 +4,7 @@ import { GamePhase, PlayerStatus } from "../constants/common";
 
 import Deck from "./deck";
 import Player from "./player";
+import Pot from "./pot";
 
 export interface GameParams {
   phase: GamePhase
@@ -13,6 +14,7 @@ export interface GameParams {
   bbBet: number
   bbId: string
   boardCards: string[]
+  pot: Pot
 }
 class Game {
   playersMap: Map<Socket, Player>;
@@ -48,27 +50,48 @@ class Game {
       bbId: "",
       turn: "",
       boardCards: [],
+      pot: new Pot(),
     };
 
     Array.from(playersMap.keys()).forEach((socket) => {
       socket.on("check", (socketId) => {
-        console.log(socketId);
+        this.updateGame();
       });
 
       socket.on("call", (socketId) => {
-
+        this.updateGame();
       });
 
       socket.on("fold", (socketId) => {
+        const sock = Array.from(playersMap.keys()).find((item) => item.id === socketId);
+        if (sock) {
+          playersMap.set(sock, {
+            ...playersMap.get(sock),
+            status: PlayerStatus.Fold,
+          } as Player);
+        }
 
+        this.updateGame();
       });
 
       socket.on("rise", (socketId) => {
+        this.updateGame();
+      });
 
+      socket.on("allIn", (socketId) => {
+        this.updateGame();
       });
     });
 
     this.initGame();
+  }
+
+  updateGame() {
+    this.server.sockets.emit(
+      "updateGame",
+      Array.from(this.playersMap.values()),
+      this.gameParams,
+    );
   }
 
   initGame() {
@@ -83,7 +106,7 @@ class Game {
         ...this.playersMap.get(item),
         isBigBlind: false,
         isSmallBlind: false,
-        status: PlayerStatus.Ready,
+        status: PlayerStatus.Playing,
       } as Player);
     });
 
@@ -105,15 +128,7 @@ class Game {
     this.gameParams.phase = GamePhase.PreFlop;
     this.gameParams.turn = sb.profile.id;
 
-    playerKeys.forEach((item) => {
-      this.playersMap.set(item, { ...this.playersMap.get(item) } as Player);
-    });
-
-    this.server.sockets.emit(
-      "initGame",
-      Array.from(this.playersMap.values()),
-      this.gameParams,
-    );
+    this.updateGame();
   }
 }
 

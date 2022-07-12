@@ -84,7 +84,7 @@ function Room() {
       } as Player));
     };
 
-    const initGame = (data: Player[], params: GameParams) => {
+    const updateGame = (data: Player[], params: GameParams) => {
       setGameParams(params);
       setUsers(data);
     };
@@ -93,7 +93,7 @@ function Room() {
     socket?.on("identify", identifyListener);
     socket?.on("received", receivedHandler);
     socket?.on("deal", dealListener);
-    socket?.on("initGame", initGame);
+    socket?.on("updateGame", updateGame);
     socket?.emit("sitDown");
     socket?.emit("getMessages");
 

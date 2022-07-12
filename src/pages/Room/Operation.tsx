@@ -37,60 +37,60 @@ function Operation({ socket, self, gameParams }: Props) {
   return (
     <div className="operation">
       {
-     !(self?.status === PlayerStatus.Ready)
-       ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
-       : (
-         <>
-           <Stack
-             direction="row"
-             spacing={1}
-           >
-             {self.showCheck && (
-             <Button
+        self?.status === PlayerStatus.Waiting && <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
+      }
+      { self?.status === PlayerStatus.Playing
+      && (
+      <>
+        <Stack
+          direction="row"
+          spacing={1}
+        >
+          {self.showCheck && (
+          <Button
               //  disabled={disabled}
-               variant="contained"
-               onClick={handleCheck}
-             >
-               Check
-             </Button>
-             )}
-             {self.showCall && (
-             <Button
+            variant="contained"
+            onClick={handleCheck}
+          >
+            Check
+          </Button>
+          )}
+          {self.showCall && (
+          <Button
               //  disabled={disabled}
-               variant="contained"
-               onClick={handleCall}
-             >
-               Call
-             </Button>
-             )}
-             <Button
+            variant="contained"
+            onClick={handleCall}
+          >
+            Call
+          </Button>
+          )}
+          <Button
               //  disabled={disabled}
-               variant="contained"
-               onClick={handleFold}
-             >
-               Fold
-             </Button>
-           </Stack>
-           <Stack
-             direction="row"
-             justifyContent="center"
-             spacing={1}
-           >
-             <Box sx={{ width: 200 }}>
-               <Slider
-                 onChange={(_, value) => setSliderVal(value as number)}
-                 step={gameParams?.bbBet}
-                 min={gameParams?.bbBet}
-                 max={self?.chips}
-               />
-             </Box>
-             <Button variant="contained" onClick={handleRise}>
-               {`Rise to ${sliderVal}`}
-             </Button>
-           </Stack>
-         </>
-       )
-  }
+            variant="contained"
+            onClick={handleFold}
+          >
+            Fold
+          </Button>
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          spacing={1}
+        >
+          <Box sx={{ width: 200 }}>
+            <Slider
+              onChange={(_, value) => setSliderVal(value as number)}
+              step={gameParams?.bbBet}
+              min={gameParams?.bbBet}
+              max={self?.chips}
+            />
+          </Box>
+          <Button variant="contained" onClick={handleRise}>
+            {`Rise to ${sliderVal}`}
+          </Button>
+        </Stack>
+      </>
+      )}
     </div>
   );
 }
