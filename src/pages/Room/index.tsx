@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Box, Button, Slider, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import ChatRoom from "../Chat";
 import { PlayerStatus, SERVER_PORT } from "@/constants/common";
 
@@ -11,6 +11,8 @@ import { IMessage } from "@/types/common";
 import Ranking from "../Ranking";
 import Player from "@/server/player";
 import Tags from "@/components/Tags";
+import { GameParams } from "@/server/game";
+import Operation from "./Operation";
 
 const { SmallBlind, BigBlind, AllIn } = Tags;
 
@@ -21,6 +23,8 @@ function Room() {
   const [users, setUsers] = useState<Player[]>([]);
   const [self, setSelf] = useState<Player>();
 
+  const [gameParams, setGameParams] = useState<GameParams>();
+
   const recordRef = useRef<HTMLDivElement>(null);
 
   const selfIndex = useMemo(
@@ -28,7 +32,7 @@ function Room() {
     [users, self],
   );
 
-  const disabled = useMemo(() => self?.profile.id !== self?.turn, [self]);
+  // const disabled = useMemo(() => self?.profile.id !== gameParams?.turn, [self]);
 
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:${SERVER_PORT}`);
@@ -80,7 +84,8 @@ function Room() {
       } as Player));
     };
 
-    const initGame = (data: Player[]) => {
+    const initGame = (data: Player[], params: GameParams) => {
+      setGameParams(params);
       setUsers(data);
     };
 
@@ -104,10 +109,6 @@ function Room() {
     }
   }, [users]);
 
-  const handleGetReady = () => {
-    socket?.emit("getReady");
-  };
-
   return (
     <div className="room">
       <Ranking users={users} selfIndex={selfIndex} />
@@ -120,9 +121,9 @@ function Room() {
               justifyContent="center"
               spacing={1}
             >
-              {self?.isSmallBlind && <SmallBlind />}
-              {self?.isBigBlind && <BigBlind />}
-              { self?.allIn && <AllIn /> }
+              {self?.profile.id === gameParams?.sbId && <SmallBlind />}
+              {self?.profile.id === gameParams?.bbId && <BigBlind />}
+              {self?.allIn && <AllIn />}
             </Stack>
 
             <div className="top">
@@ -135,7 +136,7 @@ function Room() {
                 <span style={{ color: self?.profile.color }}>{self?.profile.name}</span>
                 <span>
                   <img src={Chips} alt="chip" />
-                  {self?.chips}
+                  {self?.chips.toLocaleString()}
                 </span>
               </div>
 
@@ -159,8 +160,8 @@ function Room() {
                 justifyContent="center"
                 spacing={1}
               >
-                {item?.isSmallBlind && <SmallBlind />}
-                {item?.isBigBlind && <BigBlind />}
+                {item?.profile.id === gameParams?.sbId && <SmallBlind />}
+                {item?.profile.id === gameParams?.bbId && <BigBlind />}
                 {item?.allIn && <AllIn /> }
               </Stack>
               <div className="top">
@@ -174,7 +175,7 @@ function Room() {
                   <span style={{ color: item?.profile.color }}>{item?.profile.name}</span>
                   <span>
                     <img src={Chips} alt="chip" />
-                    {item.chips}
+                    {item.chips.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -187,45 +188,7 @@ function Room() {
             </div>
           )))}
         </div>
-        <div className="operation">
-          {
-             !(self?.status === PlayerStatus.Ready) ? <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
-               : (
-                 <>
-                   <Stack
-                     direction="row"
-                     spacing={1}
-                   >
-                     {self.showCheck && (
-                     <Button
-                       disabled={disabled}
-                       variant="contained"
-                     >
-                       Check
-                     </Button>
-                     )}
-                     {self.showCall && (
-                     <Button
-                       disabled={disabled}
-                       variant="contained"
-                     >
-                       Call
-                     </Button>
-                     )}
-                     <Button
-                       disabled={disabled}
-                       variant="contained"
-                     >
-                       Fold
-                     </Button>
-                   </Stack>
-                   <Box sx={{ width: 200 }}>
-                     <Slider />
-                   </Box>
-                 </>
-               )
-          }
-        </div>
+        <Operation self={self} gameParams={gameParams} socket={socket} />
       </div>
       <div className="right">
         <ChatRoom recordRef={recordRef} messages={messages} socket={socket} />

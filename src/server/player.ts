@@ -1,4 +1,3 @@
-// import { Socket } from "socket.io";
 import { Socket } from "socket.io";
 import { PlayerStatus } from "../constants/common";
 import { PlayerProfile } from "../types/common";
@@ -7,10 +6,6 @@ import generator from "../utils/generator";
 
 class Player {
   profile: PlayerProfile;
-
-  isSmallBlind: boolean;
-
-  isBigBlind: boolean;
 
   chips: number;
 
@@ -22,23 +17,18 @@ class Player {
 
   allIn: boolean;
 
-  turn: string;
-
   showCheck: boolean;
 
   showCall: boolean;
 
   constructor() {
     this.profile = generator.generatePlayerProfile();
-    this.isBigBlind = false;
-    this.isSmallBlind = false;
     this.allIn = false;
     this.chips = 1000;
     this.handCards = [];
     this.status = PlayerStatus.Waiting;
 
     this.bet = 0;
-    this.turn = "";
     this.showCheck = true;
     this.showCall = true;
   }

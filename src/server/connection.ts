@@ -6,6 +6,7 @@ import { PlayerStatus } from "../constants/common";
 import Player from "./player";
 import Deck from "./deck";
 import Game from "./game";
+import Pot from "./pot";
 
 const defaultUser: PlayerProfile = {
   id: randomUUID(),
@@ -23,11 +24,17 @@ class Connection {
 
   deck: Deck;
 
+  pot: Pot;
+
+  game: Game | null;
+
   constructor(io: Server, socket: Socket) {
     this.socket = socket;
     this.io = io;
 
     this.deck = new Deck();
+    this.pot = new Pot();
+    this.game = null;
 
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
@@ -94,7 +101,7 @@ class Connection {
       playersMap.set(socket, { ...value, handCards } as Player);
     });
 
-    const game = new Game(
+    this.game = new Game(
       playersMap,
       Array.from(playersMap.keys())[0],
       this.io,

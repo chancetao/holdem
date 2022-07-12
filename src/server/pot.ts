@@ -17,7 +17,7 @@ class Pot {
     ];
   }
 
-  det(amount: number, playerId: string) {
+  bet(amount: number, playerId: string) {
     this.pots[0].amount += amount;
 
     if (!this.pots[0].players.includes(playerId)) {
