@@ -14,7 +14,10 @@ export interface GameParams {
   bbBet: number
   bbId: string
   boardCards: string[]
+  maxBet: number
   pot: Pot
+  starterId: string
+  defaultStarterId: string
 }
 class Game {
   playersMap: Map<Socket, Player>;
@@ -45,45 +48,72 @@ class Game {
     this.gameParams = {
       sbBet,
       bbBet: sbBet * 2,
+      maxBet: sbBet * 2,
       phase: GamePhase.PreFlop,
       sbId: "",
       bbId: "",
       turn: "",
       boardCards: [],
       pot: new Pot(),
+      starterId: "",
+      defaultStarterId: "",
     };
 
     Array.from(playersMap.keys()).forEach((socket) => {
-      socket.on("check", (socketId) => {
-        this.updateGame();
-      });
+      socket.on("check", (playerId: string) => {
+        const nextKey = Player.getLeftPlayerKey(playersMap, playerId);
+        const next = playersMap.get(nextKey as Socket) as Player;
 
-      socket.on("call", (socketId) => {
-        this.updateGame();
-      });
-
-      socket.on("fold", (socketId) => {
-        const sock = Array.from(playersMap.keys()).find((item) => item.id === socketId);
-        if (sock) {
-          playersMap.set(sock, {
-            ...playersMap.get(sock),
-            status: PlayerStatus.Fold,
-          } as Player);
+        if (next?.profile.id === this.gameParams.starterId) {
+          this.nextGround();
+          return;
         }
 
+        this.gameParams = {
+          ...this.gameParams,
+          turn: next.profile.id,
+        };
         this.updateGame();
       });
 
-      socket.on("rise", (socketId) => {
+      socket.on("call", () => {
         this.updateGame();
       });
 
-      socket.on("allIn", (socketId) => {
+      socket.on("fold", () => {
+        playersMap.set(socket, {
+          ...playersMap.get(socket),
+          status: PlayerStatus.Fold,
+        } as Player);
+
+        this.updateGame();
+      });
+
+      socket.on("rise", () => {
+        this.updateGame();
+      });
+
+      socket.on("allIn", () => {
         this.updateGame();
       });
     });
 
     this.initGame();
+  }
+
+  nextGround() {
+    switch (this.gameParams.phase) {
+      case GamePhase.PreFlop:
+        this.gameParams = {
+          ...this.gameParams,
+          boardCards: this.deck.deal(3),
+          phase: GamePhase.Flop,
+        };
+        break;
+      default:
+    }
+
+    this.updateGame();
   }
 
   updateGame() {
@@ -112,21 +142,38 @@ class Game {
 
     const sb = this.playersMap.get(this.sbKey) as Player;
 
-    const bbKey = Player.getLeftPlayer(this.playersMap, sb.profile.id) as Socket;
+    const bbKey = Player.getLeftPlayerKey(this.playersMap, sb.profile.id) as Socket;
 
     const bb = this.playersMap.get(bbKey) as Player;
 
-    sb.bet = this.sbBet;
-    sb.chips -= this.sbBet;
-    sb.showCheck = false;
+    this.playersMap.set(this.sbKey, {
+      ...sb,
+      bet: this.sbBet,
+      chips: sb.chips - this.sbBet,
+      showCheck: false,
+    });
 
-    bb.bet = this.sbBet * 2;
-    bb.chips -= bb.bet;
+    this.playersMap.set(bbKey, {
+      ...bb,
+      bet: this.sbBet * 2,
+      chips: bb.chips - this.sbBet * 2,
+    });
 
-    this.gameParams.sbId = sb.profile.id;
-    this.gameParams.bbId = bb.profile.id;
-    this.gameParams.phase = GamePhase.PreFlop;
-    this.gameParams.turn = sb.profile.id;
+    const bbLeftKey = Player.getLeftPlayerKey(this.playersMap, bb.profile.id);
+
+    const starterId = this.playersMap
+      .get((playerKeys.length > 2 ? bbLeftKey : bbKey) as Socket)?.profile.id as string;
+
+    this.gameParams = {
+      ...this.gameParams,
+      sbId: sb.profile.id,
+      bbId: bb.profile.id,
+      phase: GamePhase.PreFlop,
+      turn: sb.profile.id,
+      maxBet: this.sbBet * 2,
+      starterId,
+      defaultStarterId: starterId,
+    };
 
     this.updateGame();
   }

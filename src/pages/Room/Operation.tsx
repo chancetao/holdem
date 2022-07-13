@@ -19,19 +19,19 @@ function Operation({ socket, self, gameParams }: Props) {
   };
 
   const handleCheck = () => {
-    socket?.emit("check", socket.id);
+    socket?.emit("check", self?.profile.id);
   };
 
   const handleCall = () => {
-    socket?.emit("call", socket.id);
+    socket?.emit("call", self?.profile.id);
   };
 
   const handleFold = () => {
-    socket?.emit("fold", socket.id);
+    socket?.emit("fold", self?.profile.id);
   };
 
   const handleRise = () => {
-    socket?.emit("rise", socket.id, sliderVal);
+    socket?.emit("rise", self?.profile.id, sliderVal);
   };
 
   return (
@@ -46,7 +46,7 @@ function Operation({ socket, self, gameParams }: Props) {
           direction="row"
           spacing={1}
         >
-          {self.showCheck && (
+          {/* {self.showCheck && ( */}
           <Button
               //  disabled={disabled}
             variant="contained"
@@ -54,8 +54,8 @@ function Operation({ socket, self, gameParams }: Props) {
           >
             Check
           </Button>
-          )}
-          {self.showCall && (
+          {/* )} */}
+          {/* {self.showCall && ( */}
           <Button
               //  disabled={disabled}
             variant="contained"
@@ -63,7 +63,7 @@ function Operation({ socket, self, gameParams }: Props) {
           >
             Call
           </Button>
-          )}
+          {/* )} */}
           <Button
               //  disabled={disabled}
             variant="contained"

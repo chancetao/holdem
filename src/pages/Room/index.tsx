@@ -85,6 +85,8 @@ function Room() {
     };
 
     const updateGame = (data: Player[], params: GameParams) => {
+      console.log(data, params);
+
       setGameParams(params);
       setUsers(data);
     };
@@ -148,6 +150,13 @@ function Room() {
             </div>
 
           </div>
+
+          <div className="board-cards">
+            {gameParams?.boardCards.map((item) => (
+              <div key={item} className={`card card-${item}`} />
+            ))}
+          </div>
+
           {users.map((item, index) => (index !== selfIndex && (
             <div
               key={item.profile.id}

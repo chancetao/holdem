@@ -33,7 +33,7 @@ class Player {
     this.showCall = true;
   }
 
-  static getLeftPlayer(players: Map<Socket, Player>, id: string) {
+  static getLeftPlayerKey(players: Map<Socket, Player>, id: string) {
     const keys = Array.from(players.keys());
     const values = Array.from(players.values());
     if (values.length <= 1) {
