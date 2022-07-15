@@ -110,6 +110,26 @@ class Game {
           phase: GamePhase.Flop,
         };
         break;
+      case GamePhase.Flop:
+        this.gameParams = {
+          ...this.gameParams,
+          boardCards: this.gameParams.boardCards.concat(this.deck.deal(1)),
+          phase: GamePhase.Turn,
+        };
+        break;
+      case GamePhase.Turn:
+        this.gameParams = {
+          ...this.gameParams,
+          boardCards: this.gameParams.boardCards.concat(this.deck.deal(1)),
+          phase: GamePhase.River,
+        };
+        break;
+      case GamePhase.River:
+        this.gameParams = {
+          ...this.gameParams,
+          phase: GamePhase.River,
+        };
+        break;
       default:
     }
 

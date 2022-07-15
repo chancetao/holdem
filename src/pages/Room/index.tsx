@@ -127,28 +127,30 @@ function Room() {
               {self?.profile.id === gameParams?.bbId && <BigBlind />}
               {self?.allIn && <AllIn />}
             </Stack>
-
-            <div className="top">
-              <div
-                className="avatar"
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: (self?.profile.avatar as string) }}
-              />
-              <div className="name">
-                <span style={{ color: self?.profile.color }}>{self?.profile.name}</span>
-                <span>
-                  <img src={Chips} alt="chip" />
-                  {self?.chips.toLocaleString()}
-                </span>
-              </div>
-
-            </div>
             <div className="hand-cards">
               {self?.handCards.map((item) => (
                 <div key={item} className={`card card-${item}`} />
               ))}
             </div>
-
+            <Stack
+              className="avatar-name"
+              direction="row"
+              alignItems="end"
+              spacing={1}
+            >
+              <div
+                className="avatar"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: (self?.profile.avatar as string) }}
+              />
+              <div className="name" style={{ color: self?.profile.color }}>
+                {self?.profile.name}
+              </div>
+            </Stack>
+            <div className="chips">
+              <img src={Chips} alt="chip" />
+              {self?.chips.toLocaleString()}
+            </div>
           </div>
 
           <div className="board-cards">

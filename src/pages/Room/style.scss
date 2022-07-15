@@ -25,6 +25,10 @@
       display: flex;
       flex-direction: row;
       gap: 8px;
+
+      position: absolute;
+      bottom: 132px;
+      left: 185px;
     }
 
     .card {
@@ -235,35 +239,42 @@
       .self {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        align-items: center;
+        gap: 16px;
         position: absolute;
         left: 310px;
         bottom: -65px;
 
-        .top {
+        .avatar-name {
+          position: absolute;
+          bottom: 22px;
+        }
+       
+        .avatar {
+          height: 64px;
+          width: 64px;
+
+          svg {
+              right: 0;
+            bottom: -10px;
+          }
+        }
+
+        .name {
+          font-size: 20px;
+        }
+
+        .chips {
+          position: relative;
+          top: 10px;
+
+          img {
+            height: 18px;
+          }
           display: flex;
+          flex-direction: row;
           align-items: center;
-          font-weight: bolder;
           gap: 8px;
-  
-          .avatar {
-            display: inline-block;
-            flex: 0 0 50px;
-          }
-  
-          .name {
-            font-size: 20px;
-            span {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
-              gap: 8px;
-            }
-  
-            img {
-              height: 22px;
-            }
-          }
         }
 
         .hand-cards {
@@ -272,13 +283,14 @@
 
           .card:nth-child(1) {
             position: relative;
-            right: -22px;
+            right: -20px;
+            transform: rotate(-7deg);
           }
 
           .card:nth-child(2) {
             position: relative;
-            left: -22px;
-
+            left: -20px;
+            transform: rotate(5deg);
           }
         }
         
@@ -309,12 +321,15 @@
 
           .card:nth-child(1) {
             position: relative;
-            right: -22px;
+            right: -20px;
+            transform: rotate(-7deg);
           }
 
           .card:nth-child(2) {
             position: relative;
-            left: -22px;
+            left: -20px;
+            transform: rotate(5deg);
+
           }
         }
 

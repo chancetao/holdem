@@ -1,5 +1,5 @@
 import { createAvatar } from "@dicebear/avatars";
-import * as style from "@dicebear/avatars-bottts-sprites";
+import * as style from "@dicebear/open-peeps";
 import { randomUUID } from "crypto";
 import { uniqueNamesGenerator, Config, names } from "unique-names-generator";
 import { PlayerProfile } from "@/types/common";
