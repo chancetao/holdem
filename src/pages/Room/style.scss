@@ -211,7 +211,7 @@
       align-items: center;
       width: 600px;
       margin: 0 auto;
-      padding-top: 80px;
+      padding-top: 120px;
 
       button {
         border-radius: 20px;
@@ -243,11 +243,19 @@
         gap: 16px;
         position: absolute;
         left: 310px;
-        bottom: -65px;
+        bottom: -50px;
 
         .avatar-name {
           position: absolute;
-          bottom: 22px;
+          bottom: -70px;
+          padding: 4px;
+          border-radius: 4px;
+          background: #6A5495;
+        }
+
+        .hand-rank{
+          position: absolute;
+          bottom: -95px;
         }
        
         .avatar {
@@ -255,26 +263,31 @@
           width: 64px;
 
           svg {
-              right: 0;
+            right: 0;
             bottom: -10px;
           }
         }
 
         .name {
           font-size: 20px;
+          min-width: 80px;
+          text-align: center;
+          font-weight: bolder;
+          // hyphens: auto;
         }
 
         .chips {
-          position: relative;
-          top: 10px;
-
-          img {
-            height: 18px;
-          }
           display: flex;
           flex-direction: row;
           align-items: center;
           gap: 8px;
+          position: relative;
+          // top: 20px;
+          font-weight: bolder;
+
+          img {
+            height: 18px;
+          }
         }
 
         .hand-cards {

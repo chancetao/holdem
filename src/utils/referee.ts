@@ -301,7 +301,10 @@ function getValues(cards: string[], rank: HandRanking): Omit<RefereeValue, "rank
   return values;
 }
 
-function referee(cards: string[]): RefereeValue {
+function referee(cards: string[]): RefereeValue | null {
+  if (cards?.length < 5) {
+    return null;
+  }
   const rank = getRank(cards);
   const res = getValues(cards, rank);
 

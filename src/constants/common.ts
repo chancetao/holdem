@@ -48,7 +48,7 @@ export enum HandRanking {
   RoyalStraightFlush,
 }
 
-export const HandRankingText = {
+export const HAND_RANKING_TEXT = {
   [HandRanking.HighCard]: "High card",
   [HandRanking.OnePair]: "One pair",
   [HandRanking.TwoPairs]: "Two pairs",

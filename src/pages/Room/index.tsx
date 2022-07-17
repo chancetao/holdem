@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
-import { PlayerStatus, SERVER_PORT } from "@/constants/common";
+import { HandRanking, HAND_RANKING_TEXT, PlayerStatus, RANKS, SERVER_PORT } from "@/constants/common";
 
 import Chips from "@/assets/Chips.svg";
 
@@ -13,6 +13,7 @@ import Player from "@/server/player";
 import Tags from "@/components/Tags";
 import { GameParams } from "@/server/game";
 import Operation from "./Operation";
+import referee from "@/utils/referee";
 
 const { SmallBlind, BigBlind, AllIn } = Tags;
 
@@ -30,6 +31,11 @@ function Room() {
   const selfIndex = useMemo(
     () => users.findIndex((item) => item.profile.id === self?.profile.id),
     [users, self],
+  );
+
+  const rankType = useMemo(
+    () => referee([...(gameParams?.boardCards || []), ...(self?.handCards || [])]),
+    [gameParams, self],
   );
 
   // const disabled = useMemo(() => self?.profile.id !== gameParams?.turn, [self]);
@@ -134,23 +140,31 @@ function Room() {
             </div>
             <Stack
               className="avatar-name"
-              direction="row"
-              alignItems="end"
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
               spacing={1}
+              divider={<Divider flexItem />}
             >
-              <div
-                className="avatar"
+              <Stack direction="row" alignItems="end" spacing={1}>
+                <div
+                  className="avatar"
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: (self?.profile.avatar as string) }}
-              />
-              <div className="name" style={{ color: self?.profile.color }}>
-                {self?.profile.name}
+                  dangerouslySetInnerHTML={{ __html: (self?.profile.avatar as string) }}
+                />
+                <div className="name" style={{ color: self?.profile.color }}>
+                  {self?.profile.name}
+                </div>
+              </Stack>
+
+              <div className="chips">
+                <img src={Chips} alt="chip" />
+                {self?.chips.toLocaleString()}
               </div>
+
             </Stack>
-            <div className="chips">
-              <img src={Chips} alt="chip" />
-              {self?.chips.toLocaleString()}
-            </div>
+            <div className="hand-rank">{ HAND_RANKING_TEXT[rankType?.rank as HandRanking]}</div>
+
           </div>
 
           <div className="board-cards">
