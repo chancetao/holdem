@@ -145,6 +145,7 @@ class Game {
       case GamePhase.PreFlop:
         this.gameParams = {
           ...this.gameParams,
+          turn: this.gameParams.starterId,
           boardCards: this.deck.deal(3),
           phase: GamePhase.Flop,
         };
@@ -152,6 +153,7 @@ class Game {
       case GamePhase.Flop:
         this.gameParams = {
           ...this.gameParams,
+          turn: this.gameParams.starterId,
           boardCards: this.gameParams.boardCards.concat(this.deck.deal(1)),
           phase: GamePhase.Turn,
         };
@@ -159,6 +161,7 @@ class Game {
       case GamePhase.Turn:
         this.gameParams = {
           ...this.gameParams,
+          turn: this.gameParams.starterId,
           boardCards: this.gameParams.boardCards.concat(this.deck.deal(1)),
           phase: GamePhase.River,
         };
@@ -166,6 +169,7 @@ class Game {
       case GamePhase.River:
         this.gameParams = {
           ...this.gameParams,
+          turn: this.gameParams.starterId,
           phase: GamePhase.River,
         };
         break;

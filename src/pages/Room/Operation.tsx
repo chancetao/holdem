@@ -51,6 +51,8 @@ function Operation({ socket, self, gameParams }: Props) {
     return false;
   }, [self, gameParams]);
 
+  const disabled = useMemo(() => gameParams?.turn !== self?.profile.id, [self, gameParams]);
+
   useEffect(() => {
     if (gameParams?.turn === self?.profile.id
        && self?.status === PlayerStatus.Fold) {
@@ -60,7 +62,6 @@ function Operation({ socket, self, gameParams }: Props) {
 
   return (
     <div className="operation">
-      {gameParams?.turn === self?.profile.id && "turn"}
       {
         self?.status === PlayerStatus.Waiting
         && <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
@@ -74,7 +75,7 @@ function Operation({ socket, self, gameParams }: Props) {
         >
           {showCheck && (
           <Button
-              //  disabled={disabled}
+            disabled={disabled}
             variant="contained"
             onClick={handleCheck}
           >
@@ -83,7 +84,7 @@ function Operation({ socket, self, gameParams }: Props) {
           )}
           {showCall && (
           <Button
-              //  disabled={disabled}
+            disabled={disabled}
             variant="contained"
             onClick={handleCall}
           >
@@ -91,7 +92,7 @@ function Operation({ socket, self, gameParams }: Props) {
           </Button>
           )}
           <Button
-              //  disabled={disabled}
+            disabled={disabled}
             variant="contained"
             onClick={handleFold}
           >
@@ -111,7 +112,11 @@ function Operation({ socket, self, gameParams }: Props) {
               max={self?.chips}
             />
           </Box>
-          <Button variant="contained" onClick={handleRise}>
+          <Button
+            variant="contained"
+            onClick={handleRise}
+            disabled={disabled}
+          >
             {`Rise to ${sliderVal}`}
           </Button>
         </Stack>
