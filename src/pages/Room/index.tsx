@@ -102,7 +102,6 @@ function Room() {
 
   return (
     <div className="room">
-      <Ranking users={users} selfIndex={selfIndex} />
       <div className="desk">
         <div className="felt">
           <Stack
@@ -117,11 +116,13 @@ function Room() {
             <Stack
               direction="row"
               justifyContent="center"
+              alignItems="center"
               spacing={1}
             >
               {self?.profile.id === gameParams?.sbId && <SmallBlind />}
               {self?.profile.id === gameParams?.bbId && <BigBlind />}
               {self?.allIn && <AllIn />}
+              {(self?.bet ?? 0) > 0 && <span>{self?.bet}</span>}
             </Stack>
             <div className="hand-cards">
               {self?.handCards.map((item) => (
@@ -129,14 +130,14 @@ function Room() {
               ))}
             </div>
             <Stack
-              className="avatar-name"
+              className="avatar-name-chips"
               direction="column"
               justifyContent="center"
               alignItems="center"
               spacing={1}
               divider={<Divider flexItem />}
             >
-              <Stack direction="row" alignItems="end" spacing={1}>
+              <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "6px 8px" }}>
                 <div
                   className="avatar"
                 // eslint-disable-next-line react/no-danger
@@ -151,7 +152,6 @@ function Room() {
                 <img src={Chips} alt="chip" />
                 {self?.chips.toLocaleString()}
               </div>
-
             </Stack>
             <div className="hand-rank">{ HAND_RANKING_TEXT[rankType?.rank as HandRanking]}</div>
 
@@ -173,33 +173,45 @@ function Room() {
               <Stack
                 direction="row"
                 justifyContent="center"
+                alignItems="center"
                 spacing={1}
               >
                 {item?.profile.id === gameParams?.sbId && <SmallBlind />}
                 {item?.profile.id === gameParams?.bbId && <BigBlind />}
                 {item?.allIn && <AllIn /> }
+                {(item?.bet ?? 0) > 0 && <span>{item?.bet}</span>}
               </Stack>
-              <div className="top">
-
-                <div
-                  className="avatar"
-                // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{ __html: (item.profile.avatar as string) }}
-                />
-                <div className="name">
-                  <span style={{ color: item?.profile.color }}>{item?.profile.name}</span>
-                  <span>
-                    <img src={Chips} alt="chip" />
-                    {item.chips.toLocaleString()}
-                  </span>
-                </div>
-              </div>
 
               <div className="hand-cards">
                 {self?.handCards.map((card) => (
                   <div key={card} className="card" />
                 ))}
               </div>
+
+              <Stack
+                className="avatar-name-chips"
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                divider={<Divider flexItem />}
+              >
+                <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "6px 8px" }}>
+                  <div
+                    className="avatar"
+                // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: (item?.profile.avatar as string) }}
+                  />
+                  <div className="name" style={{ color: item?.profile.color }}>
+                    {item?.profile.name}
+                  </div>
+                </Stack>
+
+                <div className="chips">
+                  <img src={Chips} alt="chip" />
+                  {item?.chips.toLocaleString()}
+                </div>
+              </Stack>
             </div>
           )))}
         </div>

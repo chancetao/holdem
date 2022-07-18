@@ -237,18 +237,20 @@
       box-shadow: 0 0 20px 0 #17541d inset;
 
       .self {
+        left: 310px;
+        bottom: -65px;
+      }
+
+      .self,.player {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 16px;
         position: absolute;
-        left: 310px;
-        bottom: -50px;
 
-        .avatar-name {
+        .avatar-name-chips {
           position: absolute;
-          bottom: -70px;
-          padding: 4px;
+          bottom: -40px;
           border-radius: 4px;
           background: #6A5495;
         }
@@ -259,8 +261,8 @@
         }
        
         .avatar {
-          height: 64px;
-          width: 64px;
+          height: 36px;
+          width: 36px;
 
           svg {
             right: 0;
@@ -269,10 +271,9 @@
         }
 
         .name {
-          font-size: 20px;
-          min-width: 80px;
+          font-size: 16px;
+          min-width: 60px;
           text-align: center;
-          font-weight: bolder;
           // hyphens: auto;
         }
 
@@ -281,9 +282,8 @@
           flex-direction: row;
           align-items: center;
           gap: 8px;
-          position: relative;
-          // top: 20px;
           font-weight: bolder;
+          margin-bottom: 8px;
 
           img {
             height: 18px;
@@ -310,43 +310,6 @@
       }
 
       .player {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        position: absolute;
-        font-weight: bolder;
-        gap: 8px;
-
-        .top {
-          display: flex;
-          gap: 8px;
-
-          .avatar {
-            display: inline-block;
-            flex: 0 0 32px;
-          }
-    
-        }
-
-        .hand-cards {
-          display: flex;
-          flex-direction: row;
-
-          .card:nth-child(1) {
-            position: relative;
-            right: -20px;
-            transform: rotate(-7deg);
-          }
-
-          .card:nth-child(2) {
-            position: relative;
-            left: -20px;
-            transform: rotate(5deg);
-
-          }
-        }
-
-
 
         .card {
           background-image: url("../../assets/deck.png");
@@ -379,27 +342,27 @@
         }
 
         &.left2,&.right6 {
-          bottom: 140px;
+          bottom: 160px;
           left: -85px;
         }
 
         &.left3,&.right5 {
-          bottom: 320px;
+          bottom: 350px;
           left: 70px;
         }
 
         &.left4,&.right4 {
-          bottom: 320px;
+          bottom: 350px;
           left: 320px;
         }
 
         &.left5,&.right3 {
-          bottom: 320px;
+          bottom: 350px;
           right: 70px;
         }
 
         &.left6,&.right2 {
-          bottom: 140px;
+          bottom: 160px;
           right: -70px;
         }
 
