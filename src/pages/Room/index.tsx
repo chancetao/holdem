@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Divider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
-import { HandRanking, HAND_RANKING_TEXT, PlayerStatus, SERVER_PORT } from "@/constants/common";
+import { HandRanking, HAND_RANKING_TEXT, SERVER_PORT } from "@/constants/common";
 
 import Chips from "@/assets/Chips.svg";
 
@@ -38,8 +38,6 @@ function Room() {
     [gameParams, self],
   );
 
-  // const disabled = useMemo(() => self?.profile.id !== gameParams?.turn, [self]);
-
   useEffect(() => {
     const newSocket = io(`http://${window.location.hostname}:${SERVER_PORT}`);
     setSocket(newSocket);
@@ -69,20 +67,6 @@ function Room() {
       setSelf(res);
     };
 
-    const receivedHandler = (type:string) => {
-      switch (type) {
-        case "getReady":
-          setSelf((prev) => ({
-            ...prev,
-            status: PlayerStatus.Ready,
-          } as Player));
-          break;
-
-        default:
-          break;
-      }
-    };
-
     const dealListener = (handCards:string[]) => {
       setSelf((prev) => ({
         ...prev,
@@ -99,7 +83,6 @@ function Room() {
 
     socket?.on("message", messageListener);
     socket?.on("identify", identifyListener);
-    socket?.on("received", receivedHandler);
     socket?.on("deal", dealListener);
     socket?.on("updateGame", updateGame);
     socket?.emit("sitDown");
@@ -122,6 +105,13 @@ function Room() {
       <Ranking users={users} selfIndex={selfIndex} />
       <div className="desk">
         <div className="felt">
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={1}
+          >
+            {gameParams?.pot.pots.map((item) => item.amount)}
+          </Stack>
 
           <div className="self">
             <Stack

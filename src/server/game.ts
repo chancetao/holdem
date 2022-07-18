@@ -120,6 +120,7 @@ class Game {
         playersMap.set(socket, {
           ...player,
           bet: player.bet + bet,
+          chips: player.chips - bet,
         });
 
         this.gameParams = {
@@ -141,6 +142,8 @@ class Game {
   }
 
   nextGround() {
+    this.gameParams.pot.bet(Array.from(this.playersMap.values()));
+
     switch (this.gameParams.phase) {
       case GamePhase.PreFlop:
         this.gameParams = {
