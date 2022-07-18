@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Divider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
-import { HandRanking, HAND_RANKING_TEXT, PlayerStatus, RANKS, SERVER_PORT } from "@/constants/common";
+import { HandRanking, HAND_RANKING_TEXT, PlayerStatus, SERVER_PORT } from "@/constants/common";
 
 import Chips from "@/assets/Chips.svg";
 
