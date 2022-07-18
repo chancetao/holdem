@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Socket } from "socket.io-client";
 import { Box, Button, Slider, Stack } from "@mui/material";
 import { GameParams } from "@/server/game";
@@ -19,25 +19,51 @@ function Operation({ socket, self, gameParams }: Props) {
   };
 
   const handleCheck = () => {
-    socket?.emit("check", self?.profile.id);
+    socket?.emit("check");
   };
 
   const handleCall = () => {
-    socket?.emit("call", self?.profile.id);
+    socket?.emit("call", gameParams!.maxBet - self!.bet);
   };
 
   const handleFold = () => {
-    socket?.emit("fold", self?.profile.id);
+    socket?.emit("fold");
   };
 
   const handleRise = () => {
-    socket?.emit("rise", self?.profile.id, sliderVal);
+    socket?.emit("rise", sliderVal);
   };
+
+  const showCheck = useMemo(() => {
+    if (self?.bet === gameParams?.maxBet) {
+      return true;
+    }
+    return false;
+  }, [self, gameParams]);
+
+  const showCall = useMemo(() => {
+    if (self && gameParams) {
+      if ((self.bet < gameParams.maxBet)
+      && (self?.chips > (gameParams.maxBet - self.bet))) {
+        return true;
+      }
+    }
+    return false;
+  }, [self, gameParams]);
+
+  useEffect(() => {
+    if (gameParams?.turn === self?.profile.id
+       && self?.status === PlayerStatus.Fold) {
+      handleCheck();
+    }
+  }, [self, gameParams]);
 
   return (
     <div className="operation">
+      {gameParams?.turn === self?.profile.id && "turn"}
       {
-        self?.status === PlayerStatus.Waiting && <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
+        self?.status === PlayerStatus.Waiting
+        && <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
       }
       { self?.status === PlayerStatus.Playing
       && (
@@ -46,7 +72,7 @@ function Operation({ socket, self, gameParams }: Props) {
           direction="row"
           spacing={1}
         >
-          {/* {self.showCheck && ( */}
+          {showCheck && (
           <Button
               //  disabled={disabled}
             variant="contained"
@@ -54,16 +80,16 @@ function Operation({ socket, self, gameParams }: Props) {
           >
             Check
           </Button>
-          {/* )} */}
-          {/* {self.showCall && ( */}
+          )}
+          {showCall && (
           <Button
               //  disabled={disabled}
             variant="contained"
             onClick={handleCall}
           >
-            Call
+            {`Call ${(gameParams?.maxBet ?? 0) - self.bet}`}
           </Button>
-          {/* )} */}
+          )}
           <Button
               //  disabled={disabled}
             variant="contained"
@@ -74,7 +100,7 @@ function Operation({ socket, self, gameParams }: Props) {
         </Stack>
         <Stack
           direction="row"
-          justifyContent="center"
+          justifyContent="start"
           spacing={1}
         >
           <Box sx={{ width: 200 }}>

@@ -4,7 +4,7 @@ specifiers:
   '@commitlint/cli': ^16.2.3
   '@commitlint/config-conventional': ^16.2.1
   '@dicebear/avatars': ^4.10.2
-  '@dicebear/open-peeps': ^4.10.3
+  '@dicebear/big-smile': ^4.10.3
   '@emotion/react': ^11.9.3
   '@emotion/styled': ^11.9.3
   '@mui/material': ^5.8.4
@@ -45,7 +45,7 @@ specifiers:
 
 dependencies:
   '@dicebear/avatars': 4.10.2
-  '@dicebear/open-peeps': 4.10.3_@dicebear+avatars@4.10.2
+  '@dicebear/big-smile': 4.10.3_@dicebear+avatars@4.10.2
   '@emotion/react': 11.9.3_cbpnieqasrszcwkqeh5i7z7nse
   '@emotion/styled': 11.9.3_fclcjpexflswmyfozw2dyrvvua
   '@mui/material': 5.8.4_lufg4r246lutmms4usx53hohe4
@@ -665,8 +665,8 @@ packages:
       svgson: 5.2.1
     dev: false
 
-  /@dicebear/open-peeps/4.10.3_@dicebear+avatars@4.10.2:
-    resolution: {integrity: sha512-zleGNlCP9Ry61/4SKWr8BP6oKJajXLX6h2u651YSQZHE8FGtZrQ+u+9xehyZdiFrR39zavM3DnowPY/Cfq1S6A==}
+  /@dicebear/big-smile/4.10.3_@dicebear+avatars@4.10.2:
+    resolution: {integrity: sha512-A6RCF4UtZkOhiJcYT5e+KD98HfI75mQIrxDyBbobuIcCchbplEkVrS563AgYJ2kD5kF/9PyVd4J/T+DWtKnjfg==}
     peerDependencies:
       '@dicebear/avatars': ^4.6.0
     dependencies:

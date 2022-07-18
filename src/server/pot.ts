@@ -17,12 +17,16 @@ class Pot {
     ];
   }
 
-  bet(amount: number, playerId: string) {
-    this.pots[0].amount += amount;
+  bet(players: Player[]) {
+    players.forEach((item) => {
+      if (item.bet > 0) {
+        this.pots[0].amount += item.bet;
 
-    if (!this.pots[0].players.includes(playerId)) {
-      this.pots[0].players.push(playerId);
-    }
+        if (!this.pots[0].players.includes(item.profile.id)) {
+          this.pots[0].players.push(item.profile.id);
+        }
+      }
+    });
   }
 
   allIn(players: Player[]) {

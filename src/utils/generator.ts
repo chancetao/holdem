@@ -1,5 +1,5 @@
 import { createAvatar } from "@dicebear/avatars";
-import * as style from "@dicebear/open-peeps";
+import * as style from "@dicebear/big-smile";
 import { randomUUID } from "crypto";
 import { uniqueNamesGenerator, Config, names } from "unique-names-generator";
 import { PlayerProfile } from "@/types/common";
@@ -8,7 +8,7 @@ import { COLORS } from "../constants/common";
 const config: Config = { dictionaries: [names] };
 
 function generateAvatar(): string {
-  const avatar = createAvatar(style, { seed: Date.now().toString() });
+  const avatar = createAvatar(style, { seed: Date.now().toString(), radius: 4 });
   return avatar;
 }
 

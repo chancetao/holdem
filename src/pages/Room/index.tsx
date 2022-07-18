@@ -159,7 +159,7 @@ function Room() {
 
               <div className="chips">
                 <img src={Chips} alt="chip" />
-                {self?.chips.toLocaleString()}
+                {self?.chips}
               </div>
 
             </Stack>
@@ -200,7 +200,7 @@ function Room() {
                   <span style={{ color: item?.profile.color }}>{item?.profile.name}</span>
                   <span>
                     <img src={Chips} alt="chip" />
-                    {item.chips.toLocaleString()}
+                    {item.chips}
                   </span>
                 </div>
               </div>

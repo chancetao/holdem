@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@dicebear/avatars": "^4.10.2",
-    "@dicebear/open-peeps": "^4.10.3",
+    "@dicebear/big-smile": "^4.10.3",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/material": "^5.8.4",

@@ -60,8 +60,8 @@ class Game {
     };
 
     Array.from(playersMap.keys()).forEach((socket) => {
-      socket.on("check", (playerId: string) => {
-        const nextKey = Player.getLeftPlayerKey(playersMap, playerId);
+      socket.on("check", () => {
+        const nextKey = Player.getLeftPlayerKey(playersMap, socket.id);
         const next = playersMap.get(nextKey as Socket) as Player;
 
         if (next?.profile.id === this.gameParams.starterId) {
@@ -73,10 +73,32 @@ class Game {
           ...this.gameParams,
           turn: next.profile.id,
         };
+
         this.updateGame();
       });
 
-      socket.on("call", () => {
+      socket.on("call", (bet) => {
+        const player = playersMap.get(socket) as Player;
+
+        const nextKey = Player.getLeftPlayerKey(playersMap, socket.id);
+        const next = playersMap.get(nextKey as Socket) as Player;
+
+        playersMap.set(socket, {
+          ...player,
+          bet: player.bet + bet,
+          chips: player.chips - bet,
+        } as Player);
+
+        if (next?.profile.id === this.gameParams.starterId) {
+          this.nextGround();
+          return;
+        }
+
+        this.gameParams = {
+          ...this.gameParams,
+          turn: next.profile.id,
+        };
+
         this.updateGame();
       });
 
@@ -89,7 +111,24 @@ class Game {
         this.updateGame();
       });
 
-      socket.on("rise", () => {
+      socket.on("rise", (bet) => {
+        const player = playersMap.get(socket) as Player;
+
+        const nextKey = Player.getLeftPlayerKey(playersMap, socket.id);
+        const next = playersMap.get(nextKey as Socket) as Player;
+
+        playersMap.set(socket, {
+          ...player,
+          bet: player.bet + bet,
+        });
+
+        this.gameParams = {
+          ...this.gameParams,
+          maxBet: this.gameParams.maxBet + bet,
+          starterId: player.profile.id,
+          turn: next.profile.id,
+        };
+
         this.updateGame();
       });
 
@@ -162,7 +201,7 @@ class Game {
 
     const sb = this.playersMap.get(this.sbKey) as Player;
 
-    const bbKey = Player.getLeftPlayerKey(this.playersMap, sb.profile.id) as Socket;
+    const bbKey = Player.getLeftPlayerKey(this.playersMap, this.sbKey.id) as Socket;
 
     const bb = this.playersMap.get(bbKey) as Player;
 
@@ -170,7 +209,6 @@ class Game {
       ...sb,
       bet: this.sbBet,
       chips: sb.chips - this.sbBet,
-      showCheck: false,
     });
 
     this.playersMap.set(bbKey, {
@@ -179,19 +217,19 @@ class Game {
       chips: bb.chips - this.sbBet * 2,
     });
 
-    const bbLeftKey = Player.getLeftPlayerKey(this.playersMap, bb.profile.id);
+    const bbLeftKey = Player.getLeftPlayerKey(this.playersMap, bbKey.id);
 
     const starterId = this.playersMap
       .get((playerKeys.length > 2 ? bbLeftKey : bbKey) as Socket)?.profile.id as string;
 
     this.gameParams = {
       ...this.gameParams,
+      starterId,
       sbId: sb.profile.id,
       bbId: bb.profile.id,
       phase: GamePhase.PreFlop,
-      turn: sb.profile.id,
+      turn: starterId,
       maxBet: this.sbBet * 2,
-      starterId,
       defaultStarterId: starterId,
     };
 

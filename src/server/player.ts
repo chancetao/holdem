@@ -17,10 +17,6 @@ class Player {
 
   allIn: boolean;
 
-  showCheck: boolean;
-
-  showCall: boolean;
-
   constructor() {
     this.profile = generator.generatePlayerProfile();
     this.allIn = false;
@@ -29,30 +25,28 @@ class Player {
     this.status = PlayerStatus.Waiting;
 
     this.bet = 0;
-    this.showCheck = true;
-    this.showCall = true;
   }
 
-  static getLeftPlayerKey(players: Map<Socket, Player>, id: string) {
+  static getLeftPlayerKey(players: Map<Socket, Player>, socketId: string) {
     const keys = Array.from(players.keys());
     const values = Array.from(players.values());
     if (values.length <= 1) {
       return null;
     }
-    const index = values.findIndex((item) => item.profile.id === id);
+    const index = keys.findIndex((item) => item.id === socketId);
     if (index === 0) {
       return keys[keys.length - 1];
     }
     return keys[index - 1];
   }
 
-  static getRightPlayer(players: Map<Socket, Player>, id: string) {
+  static getRightPlayer(players: Map<Socket, Player>, socketId: string) {
     const keys = Array.from(players.keys());
     const values = Array.from(players.values());
     if (values.length <= 1) {
       return null;
     }
-    const index = values.findIndex((item) => item.profile.id === id);
+    const index = keys.findIndex((item) => item.id === socketId);
     if (index === keys.length - 1) {
       return keys[0];
     }
