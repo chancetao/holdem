@@ -15,7 +15,11 @@ function Operation({ socket, self, gameParams }: Props) {
   const [sliderVal, setSliderVal] = useState(0);
 
   const handleGetReady = () => {
-    socket?.emit("getReady");
+    socket?.emit("getReady", PlayerStatus.Ready);
+  };
+
+  const handleCancelReady = () => {
+    socket?.emit("getReady", PlayerStatus.Waiting);
   };
 
   const handleCheck = () => {
@@ -65,6 +69,10 @@ function Operation({ socket, self, gameParams }: Props) {
       {
         self?.status === PlayerStatus.Waiting
         && <Button variant="contained" onClick={handleGetReady}>Get Ready</Button>
+      }
+      {
+        self?.status === PlayerStatus.Ready
+        && <Button variant="contained" onClick={handleCancelReady}>Cancel Ready</Button>
       }
       { self?.status === PlayerStatus.Playing
       && (

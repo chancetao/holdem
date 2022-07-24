@@ -65,7 +65,7 @@ class Game {
         const next = playersMap.get(nextKey as Socket) as Player;
 
         if (next?.profile.id === this.gameParams.starterId) {
-          this.nextGround();
+          this.nextPhase();
           return;
         }
 
@@ -90,7 +90,7 @@ class Game {
         } as Player);
 
         if (next?.profile.id === this.gameParams.starterId) {
-          this.nextGround();
+          this.nextPhase();
           return;
         }
 
@@ -141,7 +141,7 @@ class Game {
     this.initGame();
   }
 
-  nextGround() {
+  nextPhase() {
     this.gameParams.pot.bet(Array.from(this.playersMap.values()));
 
     switch (this.gameParams.phase) {

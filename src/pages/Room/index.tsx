@@ -8,7 +8,6 @@ import Chips from "@/assets/Chips.svg";
 
 import "./style.scss";
 import { IMessage } from "@/types/common";
-import Ranking from "../Ranking";
 import Player from "@/server/player";
 import Tags from "@/components/Tags";
 import { GameParams } from "@/server/game";
@@ -137,7 +136,7 @@ function Room() {
               spacing={1}
               divider={<Divider flexItem />}
             >
-              <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "6px 8px" }}>
+              <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "2px 8px" }}>
                 <div
                   className="avatar"
                 // eslint-disable-next-line react/no-danger
@@ -196,7 +195,7 @@ function Room() {
                 spacing={1}
                 divider={<Divider flexItem />}
               >
-                <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "6px 8px" }}>
+                <Stack direction="row" alignItems="center" spacing={1} style={{ padding: "2px 8px" }}>
                   <div
                     className="avatar"
                 // eslint-disable-next-line react/no-danger

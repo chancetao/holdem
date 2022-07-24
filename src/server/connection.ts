@@ -35,7 +35,7 @@ class Connection {
     socket.on("getMessages", () => this.getMessages());
     socket.on("message", (value) => this.handleMessage(value));
     socket.on("sitDown", () => this.connect());
-    socket.on("getReady", () => this.handleReceived("getReady"));
+    socket.on("getReady", (status) => this.handleReceived(status));
     socket.on("disconnect", () => this.disconnect());
     socket.on("connect_error", (err) => {
       // eslint-disable-next-line no-console
@@ -68,19 +68,15 @@ class Connection {
     this.sendMessage(msg);
   }
 
-  handleReceived(type: string) {
+  handleReceived(status: PlayerStatus) {
     const player = playersMap.get(this.socket) as Player;
 
-    switch (type) {
-      case "getReady":
-        playersMap.set(this.socket, {
-          ...player,
-          status: PlayerStatus.Ready,
-        } as Player);
-        this.socket.emit("received", type);
-        break;
-      default:
-    }
+    playersMap.set(this.socket, {
+      ...player,
+      status,
+    } as Player);
+
+    this.socket.emit("identify", playersMap.get(this.socket));
 
     if (!Array.from(
       playersMap.values(),
@@ -94,7 +90,11 @@ class Connection {
     Array.from(playersMap.entries()).forEach(([socket, value]) => {
       const handCards = this.deck.deal(2) as [string, string];
       this.io.to(socket.id).emit("deal", handCards);
-      playersMap.set(socket, { ...value, handCards } as Player);
+      playersMap.set(socket, {
+        ...value,
+        status: PlayerStatus.Playing,
+        handCards,
+      } as Player);
     });
 
     this.game = new Game(
