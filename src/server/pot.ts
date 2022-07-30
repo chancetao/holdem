@@ -18,11 +18,6 @@ class Pot {
   }
 
   bet(players: Player[]) {
-    this.pots = [{
-      amount: 0,
-      players: [],
-    }];
-
     players.forEach((item) => {
       if (item.bet > 0) {
         this.pots[0].amount += item.bet;

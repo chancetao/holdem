@@ -1,6 +1,6 @@
 import { HandRanking, RANKS } from "../constants/common";
 
-interface RefereeValue {
+export interface RefereeValue {
   rank: HandRanking
   cards: string[]
   weight: string

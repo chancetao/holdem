@@ -114,6 +114,7 @@ function Operation({ socket, self, gameParams }: Props) {
         >
           <Box sx={{ width: 200 }}>
             <Slider
+              disabled={disabled}
               onChange={(_, value) => setSliderVal(value as number)}
               step={gameParams?.bbBet}
               min={gameParams?.bbBet}
@@ -125,7 +126,7 @@ function Operation({ socket, self, gameParams }: Props) {
             onClick={handleRise}
             disabled={disabled}
           >
-            {`Rise to ${sliderVal}`}
+            {`Rise ${sliderVal}`}
           </Button>
         </Stack>
       </>

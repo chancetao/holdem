@@ -73,4 +73,5 @@ export enum GamePhase {
   Flop = "Flop",
   Turn = "Turn",
   River = "River",
+  Settle = "Settle",
 }

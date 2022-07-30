@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import { RefereeValue } from "@/utils/referee";
 
 import { GamePhase, PlayerStatus } from "../constants/common";
 
@@ -19,6 +20,8 @@ export interface GameParams {
   starterId: string
   defaultStarterId: string
 }
+
+export type SettlementProps = [RefereeValue, string];
 class Game {
   playersMap: Map<Socket, Player>;
 
@@ -32,6 +35,8 @@ class Game {
 
   gameParams: GameParams;
 
+  settlements: SettlementProps[];
+
   constructor(
     playersMap: Map<Socket, Player>,
     sbKey: Socket,
@@ -44,6 +49,7 @@ class Game {
     this.server = server;
     this.deck = deck;
     this.sbBet = sbBet;
+    this.settlements = [];
 
     this.gameParams = {
       sbBet,
@@ -136,6 +142,15 @@ class Game {
       socket.on("allIn", () => {
         this.updateGame();
       });
+
+      socket.on("settle", (data, id) => {
+        this.settlements.push([data, id]);
+        console.log(this.settlements);
+
+        if (this.settlements.length === playersMap.size) {
+          console.log(this.settlements);
+        }
+      });
     });
 
     this.initGame();
@@ -143,6 +158,20 @@ class Game {
 
   nextPhase() {
     this.gameParams.pot.bet(Array.from(this.playersMap.values()));
+
+    const playerKeys = Array.from(this.playersMap.keys());
+
+    playerKeys.forEach((key) => {
+      this.playersMap.set(key, {
+        ...this.playersMap.get(key),
+        bet: 0,
+      } as Player);
+    });
+
+    this.gameParams = {
+      ...this.gameParams,
+      maxBet: 0,
+    };
 
     switch (this.gameParams.phase) {
       case GamePhase.PreFlop:
@@ -173,7 +202,7 @@ class Game {
         this.gameParams = {
           ...this.gameParams,
           turn: this.gameParams.starterId,
-          phase: GamePhase.River,
+          phase: GamePhase.Settle,
         };
         break;
       default:

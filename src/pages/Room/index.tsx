@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Divider, Stack } from "@mui/material";
 import ChatRoom from "../Chat";
-import { HandRanking, HAND_RANKING_TEXT, SERVER_PORT } from "@/constants/common";
+import { GamePhase, HandRanking, HAND_RANKING_TEXT, SERVER_PORT } from "@/constants/common";
 
 import Chips from "@/assets/Chips.svg";
 
@@ -98,6 +98,12 @@ function Room() {
       setSelf(mySelf);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (gameParams?.phase === GamePhase.Settle) {
+      socket?.emit("settle", rankType, self?.profile.id);
+    }
+  }, [gameParams?.phase]);
 
   return (
     <div className="room">
